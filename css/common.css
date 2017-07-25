@@ -1,0 +1,516 @@
+html,
+body {
+    height: 100%;
+    margin: 0px;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+span {
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.iFrameWrap {
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    margin-left: 100%;
+    height: 100%;
+    float: top;
+    z-index: 100;
+ }
+
+.pullTab {
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    width: 30%;
+    height: 10%;
+    background-image: url(../res/pull_down.png);
+     background-size: contain;
+    z-index: 999;
+    transform: translate(-50%, 0);
+}
+
+.qc-button {
+    background-color: #ffa11b;
+    color:whitesmoke;
+    border-radius: 2px;
+    border: 0px;
+}
+.qc-button:active {
+    background-color: #ff8a00;
+}
+.retry-button {
+    background-color: #ffa11b;
+    text-align: center;
+    align-items: center;
+    color: whitesmoke;
+    border-radius: 5px;
+    height: 40px;
+    width: 200px;
+    border: 0px;
+    letter-spacing: 4px;
+    vertical-align: middle;
+    font-size: 20px;
+}
+.retry-button:active {
+    background-color: #ff8a00;
+}
+.retryMenu {
+    position: fixed;
+    bottom: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 16vw;
+}
+
+.divRetry {
+    right: 50%;
+    height: 16vw;
+    width: 44vw;
+    text-align: center;
+    background-position: 100% 100%;
+    background-image: url(../res/retry.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bottomLog {
+}
+
+.navPage {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.mainPage {
+    height: 100%;
+    margin: 0px;
+}
+
+.specImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.controlPage {
+    height: 100%;
+    margin: 0px;
+}
+
+.loadingToast {
+    display: none;
+}
+
+.topMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*top: 14%;*/
+    width: 100%;
+    height: 15vw;
+    /*position: absolute;*/
+    /*transform: translate(0%, -50%);*/
+    padding-top: 10%;
+}
+
+.centerMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*top: 43%;*/
+    width: 100%;
+    height: 80vw;
+    /*transform: translate(0, -50%);*/
+}
+
+.centerControl {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../res/center_small.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 100% 0%;
+    width: 100vw;
+    height: 100vw;
+}
+
+.centerControl-holder {
+    position: relative;
+    transform: rotate(45deg);
+    width: 70vw;
+    height: 70vw;
+}
+
+.bottomMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*top: 71%;*/
+    width: 100%;
+    height: 20vw;
+    /*position: absolute;*/
+    /*transform: translate(0%, -50%);*/
+}
+
+.btnNext {
+    text-align: center;
+    background-color: red;
+    height: 50%;
+}
+
+.sendMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*top: 86%;*/
+    width: 100%;
+    height: 20vw;
+    margin-top: 5%;
+    /*position: absolute;*/
+    /*transform: translate(0%, -50%);*/
+}
+
+.divLeft {
+    text-align: center;
+    height: 20vw;
+    width: auto;
+    position: absolute;
+    left: 25%;
+    transform: translate(-50%, 0%);
+}
+
+.divRight {
+    text-align: center;
+    height: 20vw;
+    position: absolute;
+    right: 25%;
+    transform: translate(50%, 0%);
+}
+
+.divCenter {
+    text-align: center;
+    height: 20vw;
+    position: absolute;
+    right: 50%;
+    transform: translate(50%, 0%);
+}
+
+.divSmallIcon {
+    height: 20vw;
+    width: 20vw;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 100% 0%;
+}
+
+.divAdd {
+    background-image: url(../res/add.png);
+}
+
+.divMinus {
+    background-image: url(../res/minus.png);
+}
+
+.divMenu {
+    background-image: url(../res/menu.png);
+}
+
+.divHome {
+    background-image: url(../res/home.png);
+}
+
+.divBack {
+    background-image: url(../res/back.png);
+}
+
+.sendwrap {
+    width: 60vw;
+    display: flex;
+    height: 10vw;
+    background-image: url(../res/inputdisable.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    /*width: 64%;*/
+}
+
+.divInput {
+    height: 100%;
+    flex: 1;
+    padding-bottom: 0px;
+    padding-left: 5%;
+    padding-right: 5%;
+    background-color: transparent;
+    border: 0px;
+}
+
+.divSend {
+    width: 18%;
+}
+
+.bottomLog {
+    top: 90%;
+    width: 100%;
+    position: absolute;
+}
+
+.centerControlBbtn {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    text-align: center;
+}
+
+.centerControlOk {
+    text-align: center;
+    height: 25vw;
+    width: 25vw;
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    left: 50%;
+    /*right: 50%;*/
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.wizard {
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #909090;
+}
+
+.summary-text {
+    color: #909090;
+}
+
+.wizard-spec-icon-div {
+    height: 39px;
+    line-height: 39px;
+}
+
+.wizard-spec-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.wizard-bold-line {
+    height: 5px;
+    background-color: #e4e4e4;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.wizard-wifi-iframe {
+    border: none;
+    width: 100%;
+}
+
+.wizard-thin-line {
+    height: 1px;
+    background-color: #e4e4e4;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.wizard-split-line {
+    height: 5px;
+    background-color: #e4e4e4;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.wifi-list {
+    overflow-y: auto;
+}
+
+.wifi-retry {
+    margin-top: 15px;
+}
+
+.wifi-retry-btn-div {
+    width: 100%;
+    text-align: center;
+}
+
+.wifi-retry-btn {
+    text-align: center;
+    height: 50px;
+    border-radius: 50px;
+    width: 100%;
+}
+
+.wifi-retry-btn:active {
+    background-color: #e4e4e4;
+}
+
+.wifi-scan-btn {
+    height: 25px;
+    border-radius: 50px;
+}
+
+.wifi-scan-btn:active {
+    background-color: #e4e4e4;
+}
+
+.wifi-list-split-line {
+    height: 1px;
+    background-color: #e4e4e4;
+}
+
+.wifi-item-index {
+    height: 64px;
+    line-height: 64px;
+}
+
+.wifi-item-desc {
+    padding-left: 10px;
+}
+
+.wifi-item-desc-ssid {
+    height: 32px;
+    line-height: 32px;
+}
+
+.wifi-item-desc-state {
+    height: 32px;
+    line-height: 32px;
+}
+
+.wifi-item-icon-div {
+    height: 64px;
+    line-height: 64px;
+    padding-right: 10px;
+}
+
+.wifi-rssi-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.wifi-security-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.wifi-access-div {
+    display: none;
+    text-align: center;
+}
+
+.wifi-access-input {
+    width: 70%;
+}
+
+.wifi-access-button {
+    width: 12%;
+    text-align: center;
+    margin-left: 5px;
+    border-radius: 50px;
+    outline: none;
+}
+
+.wifi-access-button-ios {
+    width: 12%;
+    text-align: center;
+    margin-left: 5px;
+    border-radius: 50px;
+    outline: none;
+    box-shadow: 1px 1px 1px grey;
+}
+
+.wifi-access-button-ios:active {
+    background-color: #e4e4e4;
+    box-shadow: -1px -1px 1px grey;
+}
+
+.wifi-action-div {
+    display: none;
+    text-align: center;
+}
+
+.wifi-action-button {
+    width: 90%;
+    border-radius: 50px;
+    outline: none;
+}
+
+.wifi-action-button-ios {
+    width: 90%;
+    border-radius: 50px;
+    outline: none;
+    box-shadow: 1px 1px 1px grey;
+}
+
+.wifi-action-button-ios:active {
+    background-color: #e4e4e4;
+    box-shadow: -1px -1px 1px grey;
+}
+
+.top-bar {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.top-bar-title {
+    font-size: 18px;
+    height: 39px;
+    line-height: 39px;
+}
+
+.airplay-dl-btn-div {
+    margin-top: 100px;
+ }
+
+.airplay-start-btn-div {
+    text-align: center;
+}
+
+.airplay-btn {
+    width: 40px;
+    line-height: 20px;
+    border: 1px solid  ;
+    border-radius: 5px;
+    color: orange;
+    background-color: transparent;
+    outline: none;
+}
+
+.airplay-btn:active {
+    background-color: #e4e4e4;
+}
+
+.airplay-bg {
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+}
+
+.airplay-start-btn {
+    margin-top: 40px;
+}
+
+.step-next {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.weui-icon-warn {
+    color: #FFBE00;
+}

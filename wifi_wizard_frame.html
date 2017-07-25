@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizard Wi-Fi Link</title>
+    <link rel="stylesheet" href="css/bootstrap-3.3.7/bootstrap.min.css">
+    <link rel="stylesheet" href="css/weui-1.1.1/weui.min.css">
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+<!--<div class="wizard">-->
+    <!--<div class="weui-flex top-bar" onclick="parent.window.onWizardSpecClick()">-->
+        <!--<div class="weui-flex__item">-->
+            <!--<i class="weui-icon-warn"></i>-->
+            <!--<span class="top-bar-title">手机网络设置方法</span>-->
+        <!--</div>-->
+        <!--<div class="wizard-spec-icon-div">-->
+            <!--<img class="wizard-spec-icon" src="res/more.png">-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<div class="wizard-bold-line"></div>-->
+<div class="wizard">
+    <div class="weui-flex" style="margin-top: 10px">
+        <div class="weui-flex__item">
+            <p class="summary-text">投影仪网络设置</p>
+        </div>
+        <div class="wifi-scan-btn btn-with-active" onclick="parent.window.onWifiRefreshClick()">
+            <span>搜索网络</span>
+            <img style="width: 18px; height: 18px" src="res/more.png">
+        </div>
+    </div>
+</div>
+<div class="wizard-split-line"></div>
+<div class="wizard">
+<!--     <div id="id_Loading">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content"></p>
+        </div>
+    </div> -->
+    <div id="id_WifiList">
+        <div class="wifi-list" id="id_WifiItems"></div>
+        <div id="id_RetryDiv">
+            <div class="wizard-bold-line"></div>
+            <div class="weui-flex">
+                <div class="weui-flex__item"></div>
+                <div class="weui-flex__item" onclick="parent.window.onNextStepClick()">
+                    <div class="wifi-retry-btn btn-with-active">
+                        <img class="wizard-spec-icon" src="res/refresh.png">
+                        <p>重试</p>
+                    </div>
+                </div>
+                <div class="weui-flex__item"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
