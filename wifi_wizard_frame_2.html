@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizard Wi-Fi Link</title>
+    <link rel="stylesheet" href="css/bootstrap-3.3.7/bootstrap.min.css">
+    <link rel="stylesheet" href="css/weui-1.1.1/weui.min.css">
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<style>
+    body {
+        height: 100%;
+        margin: 0;
+    }
+    .menu-item {
+        background-color: whitesmoke;
+     }
+    .menu-item-on {
+        background-color: #ff8a00;
+    }
+</style>
+<body>
+
+<div class="mainPage" style="flex-direction: column;height: 20rem">
+    <div id="id_top_menu" style=" width: 100%;height: 100%; order: -1;flex: 0 0 ;">
+        <div class="menu-item" style="display: flex;height: 100%;justify-content:space-between">
+            <div class="menu-item  menu-item-on" id="menu_controller">
+                列表选择
+            </div>
+            <div class="menu-item" id="menu_wireless_store">
+                手动输入
+            </div>
+        </div>
+        <div style="clear: both"></div>
+    </div>
+    <div class="page__bd" style="background-color: green;flex: 1;,margin: 0">
+        <a href="wifi_wizard_frame.html" style="height: 100%"></a>
+        <!--<a href="wifi_history_frame.html"></a>-->
+    </div>
+    <!--</div>-->
+</div>
+<!--</div>-->
+<script type='text/javascript' src='js/soundjs/soundjs-NEXT.min.js'></script>
+<script src='js/jquery/jquery.min.js'></script>
+<script type='text/javascript' src='js/weixin/jweixin-1.2.0.js'></script>
+<script type="text/javascript">
+    $(function () {
+        $('.weui-navbar__item').on('click', function () {
+            $(this).addClass('menu-item-on').siblings('.weui-navbar__item').removeClass('menu-item-on ');
+        });
+    });
+</script>
+</body>
+</html>
