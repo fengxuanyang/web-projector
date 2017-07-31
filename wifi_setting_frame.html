@@ -62,9 +62,9 @@
     </div>
     <div>
         <iframe class="menu-body-frame menu-body-frame-onshow" id="frame_wifi_history"
-                src="wifi_history_frame.html" onload="iframeWifiHistoryLoad()"></iframe>
+                src="wifi_history_frame.html" onload="parent.window.iframeWifiHistoryLoad()"></iframe>
         <iframe class="menu-body-frame" id="frame_wifi_nearby"
-                src="wifi_wizard_frame.html" onload="iframeWifiNearbyLoad()"></iframe>
+                src="wifi_wizard_frame.html" onload="parent.window.iframeWifiNearbyLoad()"></iframe>
     </div>
 </div>
 <script src='js/jquery/jquery.min.js'></script>
