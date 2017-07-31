@@ -9,10 +9,22 @@ var currentWifiSsid;
 var currentWifiPsw;
 var wifiList;
 
+function ShowTheObject(obj) {
+    var des = "";
+    for (var name in obj) {
+        des += name + ":" + obj[name] + ";";
+    }
+    return des;
+}
 
 function iframeWifiHistoryLoad() {
+    showResult("iframeWifiHistoryLoad", "onload");
+
     sendCommandBase64(getWifiHistoryCmd());
-    historyFrame = $('#iframe_filemanager').contents();
+    // historyFrame = $('#iframe_filemanager').contents();
+
+    historyFrame = $('#iframe_filemanager').contents().find("#frame_wifi_history").contents();
+    showResult("historyFrame", ShowTheObject(historyFrame));
     if (isIos()) {
         historyFrame.find('#wifihistory_navpage').css({
             'background-image': 'url(res/wifihistory_ios_bg.jpg)',
@@ -22,13 +34,14 @@ function iframeWifiHistoryLoad() {
         });
 
     }
-    historyFrame.find('body').on('touchmove', function(e) {
+    historyFrame.find('body').on('touchmove', function (e) {
         e.preventDefault();
     });
     wifiSsidSelect = historyFrame.find('#wifihistory_select_wifissid');
     wifiSsidInput = historyFrame.find('#wifihistory_input_ssid');
     wifiPswInput = historyFrame.find('#wifihistory_input_psw');
-    historyFrame.find('#wifihistory_next_btn').on('click', function(event) {
+    historyFrame.find('#wifihistory_next_btn').on('click', function (event) {
+        showResult("wifihistory_next_btn", "click");
         currentWifiSsid = wifiSsidInput.val() + "";
         currentWifiPsw = wifiPswInput.val() + "";
         if (!currentWifiSsid) {
@@ -44,7 +57,7 @@ function iframeWifiHistoryLoad() {
         // showResult("connect currentWifiSsid：", currentWifiSsid);
         //connect wifi 
         sendCommandBase64(getWifiSSIDConnectCmd(currentWifiSsid, currentWifiPsw));
-        $(document).on(EVENT_WIFI_LSIT, function(event, wifiList) {
+        $(document).on(EVENT_WIFI_LSIT, function (event, wifiList) {
             for (var i = 0; i < wifiList.length; i++) {
                 var wifiinfo = wifiList[i];
                 // showResult("wifiInfo :", wifiinfo.getSsid() + "," + wifiinfo.getState());
@@ -61,7 +74,7 @@ function iframeWifiHistoryLoad() {
     });
 
 
-    historyFrame.find('#wifihistory_previous_btn').on('click', function(event) {
+    historyFrame.find('#wifihistory_previous_btn').on('click', function (event) {
         historyFrame.find('#wifihistory_mainpage').css({
             display: 'block',
         });
@@ -73,16 +86,16 @@ function iframeWifiHistoryLoad() {
 
     });
 
-    historyFrame.find('#airplay_downoad_lebo').on('click', function(event) {
+    historyFrame.find('#airplay_downoad_lebo').on('click', function (event) {
         window.location.assign(airPlaydownLoadUrl);
     });
 
-    historyFrame.find('#wifihistory_connect_btn').on('click', function(event) {
+    historyFrame.find('#wifihistory_connect_btn').on('click', function (event) {
         subEvent(EVENT_IP_REQ);
     });
 
     //  wifi history list result  
-    $(document).on(EVENT_WIFI_HISTORY_LSIT, function(event, list) {
+    $(document).on(EVENT_WIFI_HISTORY_LSIT, function (event, list) {
         hideLoadingToast();
         wifiList = list;
         for (var i = 0; i < wifiList.length; i++) {
@@ -92,7 +105,7 @@ function iframeWifiHistoryLoad() {
             var option = "<option value='" + psw + "'>" + ssid + "</option>";
             wifiSsidSelect.append(option);
         }
-        setTimeout(function() {
+        setTimeout(function () {
             wifiSsidInput.val(wifiSsidSelect.find("option:selected").text());
             wifiPswInput.val(wifiSsidSelect.find("option:selected").val());
         }, 0);

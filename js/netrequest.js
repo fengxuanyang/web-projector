@@ -35,44 +35,53 @@ function convertURL(url) {
 }
 
 function ping(ip, callback, timeout) {
-
+    showResult("ping start", ip);
     var img = new Image();
     var start = new Date().getTime();
     var flag = false;
     var isCloseWifi = true;
     var hasFinish = false;
 
-    img.onload = function () {
-        if (!hasFinish) {
-            flag = true;
-            hasFinish = true;
-            img.src = 'X:\\';
-            callback(flag);
-        }
-    };
+    // img.onload = function () {
+    //     showResult("ping onload", ip);
+    //     if (!hasFinish) {
+    //         clearTimeout(timer);
+    //         hasFinish = true;
+    //         flag = true;
+    //         callback(flag);
+    //     }
+    // };
 
-    img.onerror = function () {
-        if (!hasFinish) {
+    img.onload = img.onerror = function () {
+         if (!hasFinish) {
+            clearTimeout(timer);
+            hasFinish = true;
             if (!isCloseWifi) {
                 flag = true;
-                img.src = 'X:\\';
-                callback(flag);
-
-            } else {
-                callback(flag);
             }
-            hasFinish = true;
+            callback(flag);
         }
+
     };
 
     setTimeout(function () {
         isCloseWifi = false;
     }, 2);
+
     img.src = 'http://' + ip + '/' + start;
+    var timer = setTimeout(function () {
+         if (!flag) {
+            hasFinish = true;
+            img.src = 'X://';
+            flag = false;
+            callback(flag);
+        }
+    }, timeout);
 }
 
 function pingHttpGet(ip, callback) {
-     var flag = false;
+    showResult("pingHttpGet",ip);
+    var flag = false;
     var url = "http://" + ip + ":45678/ping" + "?request_type=2";
     $.ajax({
         url: url,

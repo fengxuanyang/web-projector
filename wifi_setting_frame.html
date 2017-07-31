@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizard Wi-Fi Link</title>
+    <link rel="stylesheet" href="css/bootstrap-3.3.7/bootstrap.min.css">
+    <link rel="stylesheet" href="css/weui-1.1.1/weui.min.css">
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<style>
+    body {
+        font-size: 62.5%;
+        height: 100%;
+        margin: 0;
+    }
+
+    .menu-item {
+        background-color: whitesmoke;
+    }
+
+    .menu-item-on {
+        background-color: #ff8a00;
+    }
+
+    .menu-body {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+
+    }
+
+    .menu-body-frame {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 0;
+        border: none;
+    }
+
+    .menu-body-frame-onshow {
+        position: absolute;
+        width: 100%;
+        height: 100%;;
+        border: 0;
+        background-color: white;
+    }
+</style>
+<body>
+
+<div style="display:flex;flex-direction: column;height: 100%">
+    <div style="display: flex; height: 5rem;  justify-content:space-between;">
+        <div class="menu-item  menu-item-on" id="menu_wifi_nearby" style="flex: 1"
+             onclick="showMenuBody('frame_wifi_history')">
+            列表选择
+        </div>
+        <div class="menu-item" id="menu_wifi_history" style="flex: 1" onclick="showMenuBody('frame_wifi_nearby')">
+            手动输入
+        </div>
+    </div>
+    <div>
+        <iframe class="menu-body-frame menu-body-frame-onshow" id="frame_wifi_history"
+                src="wifi_history_frame.html" onload="iframeWifiHistoryLoad()"></iframe>
+        <iframe class="menu-body-frame" id="frame_wifi_nearby"
+                src="wifi_wizard_frame.html" onload="iframeWifiNearbyLoad()"></iframe>
+    </div>
+</div>
+<script src='js/jquery/jquery.min.js'></script>
+<script type="text/javascript">
+    !(function () {
+        $('.menu-item').on('click', function () {
+            $(this).addClass('menu-item-on').siblings('.menu-item').removeClass('menu-item-on');
+        });
+    })();
+
+    function showMenuBody(elem) {
+        console.log(elem);
+        $("#" + elem).addClass('menu-body-frame-onshow').siblings('.menu-body-frame').removeClass('menu-body-frame-onshow');
+    }
+
+</script>
+</body>
+</html>

@@ -15,17 +15,5 @@ var intervalId;
 
 function iframeWirelessLoad() {
     frame = $('#iframe_filemanager').contents();
-    frame.find('.divRetry').on('touchstart touchend', function(event) {
-        if (event.type === 'touchstart') {
-            frame.find('.divRetry').css({
-                'background-position': '100%  0%'
-            });
-            return;
-        }
-        if (event.type === 'touchend') {
-            frame.find('.divRetry').css({
-                'background-position': '100%  100%'
-            });
-        }
-    });
+
 }

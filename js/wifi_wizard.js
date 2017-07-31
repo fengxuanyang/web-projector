@@ -5,12 +5,13 @@ var connected = false;
 var userAgent = navigator.userAgent.toLowerCase();
 var iosSystem = false;
 
-function iframeWifiLoad() {
+function iframeWifiNearbyLoad() {
     iosSystem = isIos();
-    myFrame = $('#iframe_filemanager').contents();
+    myFrame = $('#iframe_filemanager').contents().find("#frame_wifi_nearby").contents();
+    // myFrame = $('#iframe_filemanager').contents();
     mWifiListObj = myFrame.find('#id_WifiList');
     mWifiItemsObj = myFrame.find('#id_WifiItems');
-    onWifiRefreshClick();
+    // onWifiRefreshClick();
     registerWifiEventListener();
 
     var wifiListHeight;

@@ -240,12 +240,26 @@ function getDeviceInfoCmd() {
 
 function getResponseFromBase64(base64Str) {
     var receiveRawData = base64ToArrayBuffer(base64Str);
-    var cmdIdRawData = receiveRawData.slice(0, 2);
-    //test for vivo
-    var cmdCode = bytes2Int(cmdIdRawData);
-    showResult("cmdCode:", cmdCode);
-    var responseDataRawData = receiveRawData.slice(2);
+    var cmdIdRawData;
+    var responseDataRawData;
+    var cmdCode;
     var responsedata;
+    // if (Object.prototype.toString.call(receiveRawData) == "[object Uint8Array]") {
+    if ((receiveRawData.toString() == "[object Uint8Array]")) {
+        cmdIdRawData = new Uint8Array(2);
+        cmdIdRawData[0] = receiveRawData[0];
+        cmdIdRawData[1] = receiveRawData[1];
+        var cmdCode = bytes2Int(cmdIdRawData);
+        responseDataRawData = new Uint8Array(receiveRawData.length - 2);
+        for (var i = 2; i < receiveRawData.length; i++) {
+            responseDataRawData[i - 2] = receiveRawData[i];
+        }
+    } else {
+        cmdIdRawData = receiveRawData.slice(0, 2);
+        cmdCode = bytes2Int(cmdIdRawData);
+        responseDataRawData = receiveRawData.slice(2);
+    }
+    showResult("cmdCode:", cmdCode);
     switch (cmdCode) {
         case proto.airsync.CmdId.RESP_KEY_INPUT:
             responsedata = proto.airsync.BaseResponse.deserializeBinary(responseDataRawData);
@@ -257,13 +271,13 @@ function getResponseFromBase64(base64Str) {
             responsedata = proto.airsync.EditFocusChangePush.deserializeBinary(responseDataRawData);
             break;
         case proto.airsync.CmdId.REQ_KEY_INPUT:
-            responsedata = proto.airsync.KeyInputRequest.deserializeBinary(responseDataRawData);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        responsedata = proto.airsync.KeyInputRequest.deserializeBinary(responseDataRawData);
             break;
         case proto.airsync.CmdId.RESP_FILE_MANAGER:
             responsedata = proto.airsync.FileManagerResponse.deserializeBinary(responseDataRawData);
             break;
         case proto.airsync.CmdId.RESP_WIFI:
-             responsedata = proto.airsync.WifiResponse.deserializeBinary(responseDataRawData);
+            responsedata = proto.airsync.WifiResponse.deserializeBinary(responseDataRawData);
             break;
         case proto.airsync.CmdId.RESP_IP:
             responsedata = proto.airsync.IpResponse.deserializeBinary(responseDataRawData);

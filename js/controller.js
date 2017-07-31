@@ -1,8 +1,52 @@
-var mControlFrame, mControlCenter, mDivAdd, mDivMinus, mDivHome, mDivMenu, mDivBack;
+var mControlFrame, mControlCenter, mDivAdd, mDivMinus, mDivHome, mDivMenu, mDivBack, mInputDiv, controlPage;
 var userAgent = navigator.userAgent.toLowerCase();
 var iosSystem = false, mWaitTimer = 150, mCanPress = true;
 
 function iframeControllerLoad() {
+    showResult("iframeControllerLoad");
+
+    mControlFrame = $('#iframe_filemanager').contents();
+    mInputDiv = mControlFrame.find("#control_input");
+    controlPage = mControlFrame.find("#control_page");
+
+
+    var windowheight = $(window).height();
+    showResult("windowheight", windowheight);
+
+    var doheight = $(document).height();
+    showResult("doheight", doheight);
+    var htmlHeight = $("html").height();
+    showResult("htmlHeight", htmlHeight);
+    var bodyHeight = $("body").height();
+    showResult("bodyHeight", bodyHeight);
+    var bcolor = $("body").css("background-color");
+    showResult("body color", bcolor);
+    var htmlcolor = $("html").css("background-color");
+    showResult("htmlcolor color", htmlcolor);
+    mInputDiv.focus(function () {
+        var doheight = $(document).height();
+        showResult("focus doheight", doheight);
+        var htmlHeight = $("html").height();
+        showResult("htmlHeight", htmlHeight);
+        var bodyHeight = $("body").height();
+        showResult("focus bodyHeight", bodyHeight);
+        $("body").css({
+            "top": "0px",
+            "height": windowheight + "px"
+        });
+    });
+    mInputDiv.blur(function () {
+        var doheight = $(document).height();
+        showResult("blur doheight", doheight);
+        var htmlHeight = $("html").height();
+        showResult("blur htmlHeight", htmlHeight);
+        var bodyHeight = $("body").height();
+        showResult("blur bodyHeight", bodyHeight);
+        $("body").css({
+            "top": "0px",
+            "height": windowheight + "px"
+        });
+    });
     iosSystem = isIos();
     loadSound();
     registerCotrollerViewListener();
@@ -12,7 +56,8 @@ function iframeControllerLoad() {
 function registerControlEventListener() {
     $(document).on(EVENT_EDIT_FOCUS_CHANGE, function (event, editfocusMsg) {
         if (editfocusMsg.focusState === proto.airsync.FocusSate.TRUE) {
-            mControlFrame.find('#control_input').attr("disabled", false);
+            mInputDiv.attr("disabled", false);
+            mInputDiv.focus()
             mControlFrame.find(".sendwrap").css({
                 "pointer-events": "",
                 "background-image": "url(res/inputenable.png)"
@@ -22,13 +67,13 @@ function registerControlEventListener() {
                 "pointer-events": "none",
                 "background-image": "url(res/inputdisable.png)"
             });
+            mInputDiv.blur();
         }
-        mControlFrame.find("#control_input").val(editfocusMsg.text);
+        mInputDiv.val(editfocusMsg.text);
     });
 }
 
 function registerCotrollerViewListener() {
-    mControlFrame = $('#iframe_filemanager').contents();
     mControlFrame.find("body").on("touchmove", function (e) {
         e.preventDefault();
     });
@@ -339,7 +384,7 @@ function registerCotrollerViewListener() {
 
     mControlFrame.find('#control_send').on('touchstart touchend', function (event) {
         if (event.type === 'touchstart') {
-            var msg = mControlFrame.find('#control_input').val();
+            var msg = mInputDiv.val();
             if (msg === testCode) {
                 mControlFrame.find('.bottomLog').css({
                     visibility: 'visible'
@@ -366,22 +411,6 @@ function registerCotrollerViewListener() {
         }
     });
 
-    mControlFrame.find('#retry_connect').on('touchstart touchend', function (event) {
-        if (event.type === 'touchstart') {
-            mControlFrame.find('.divRetry').css({
-                'background-position': '100%  0%'
-            });
-            showLoadingToast();
-            openDevice();
-            getDeviceInfo();
-            return;
-        }
-        if (event.type === 'touchend') {
-            mControlFrame.find('.divRetry').css({
-                'background-position': '100%  100%'
-            });
-        }
-    });
 }
 
 function sendCommandBase64(cmd, callback) {

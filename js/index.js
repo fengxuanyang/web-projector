@@ -44,8 +44,15 @@ $(document).ready(function () {
     //     });
     // }
 
-    initView();
+    console.log(typeof(fxy));
 
+    initView();
+    var doheight = $(document).height();
+    showResult("doheight", doheight);
+     var bcolor = $(document.body).css("background-color");
+    showResult("body color", bcolor);
+    var htmlcolor = $("html").css("background-color");
+    showResult("htmlcolor color", htmlcolor);
     setSettingCheck();
 
     registerEventListener();
@@ -74,7 +81,9 @@ function initView() {
 }
 
 function setSettingCheck() {
-    module = getUrlParam("module");
+    // module = getUrlParam("module");
+    module = FRAME_WIFI_SETTING;
+    switchFrame(FRAME_WIFI_SETTING);
     sessionStorage.module = module;
     switch (module) {
         case MODULE_TV_CONTROLLER:
@@ -110,7 +119,9 @@ function checkSetting() {
     }
 
     if (((SETTING_CHECK & WIFI_STATUS_OK) == WIFI_STATUS_OK) && ((netStatus & WIFI_STATUS_OK) != WIFI_STATUS_OK)) {
+        hideLoadingToast();
         subEvent(EVENT_IP_REQ);
+        showLoadingToast("检查网络");
         return;
     }
 
@@ -118,7 +129,7 @@ function checkSetting() {
         if (deviceInfo) {
             pingHttpGet(projectorIP, pingCallback);
         } else {
-            ping(projectorIP, pingCallback, 3000);
+            ping(projectorIP, pingCallback, 2000);
 
         }
         return;
@@ -293,6 +304,11 @@ function switchFrame(index) {
             loadFunction = "onload='iframeControllerLoad()'";
             url = 'controller_wizard_frame.html';
             name = FRAME_CONTROLLER;
+            break;
+        case FRAME_WIFI_SETTING:
+            loadFunction = "onload='iframeWifiSettingLoad()'";
+            url = 'wifi_setting_frame.html';
+            name = FRAME_WIFI_SETTING;
             break;
     }
 
