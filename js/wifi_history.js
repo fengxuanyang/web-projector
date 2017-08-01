@@ -8,23 +8,19 @@ var wifiPswInput;
 var currentWifiSsid;
 var currentWifiPsw;
 var wifiList;
+var loadingToast;
 
-function ShowTheObject(obj) {
-    var des = "";
-    for (var name in obj) {
-        des += name + ":" + obj[name] + ";";
-    }
-    return des;
-}
 
 function iframeWifiHistoryLoad() {
     showResult("iframeWifiHistoryLoad", "onload");
+    //TODO
+    // sendCommandBase64(getWifiHistoryCmd());
 
-    sendCommandBase64(getWifiHistoryCmd());
     // historyFrame = $('#iframe_filemanager').contents();
 
     historyFrame = $('#iframe_filemanager').contents().find("#frame_wifi_history").contents();
-    showResult("historyFrame", ShowTheObject(historyFrame));
+    loadingToast = historyFrame.find("#loading_toast");
+    showWifiHistoryLoadingToast("检查网络");
     if (isIos()) {
         historyFrame.find('#wifihistory_navpage').css({
             'background-image': 'url(res/wifihistory_ios_bg.jpg)',
@@ -37,6 +33,7 @@ function iframeWifiHistoryLoad() {
     historyFrame.find('body').on('touchmove', function (e) {
         e.preventDefault();
     });
+
     wifiSsidSelect = historyFrame.find('#wifihistory_select_wifissid');
     wifiSsidInput = historyFrame.find('#wifihistory_input_ssid');
     wifiPswInput = historyFrame.find('#wifihistory_input_psw');
@@ -96,7 +93,7 @@ function iframeWifiHistoryLoad() {
 
     //  wifi history list result  
     $(document).on(EVENT_WIFI_HISTORY_LSIT, function (event, list) {
-        hideLoadingToast();
+        hideWifiHistoryLoadingToast();
         wifiList = list;
         for (var i = 0; i < wifiList.length; i++) {
             var wifiInfo = wifiList[i];
@@ -110,4 +107,15 @@ function iframeWifiHistoryLoad() {
             wifiPswInput.val(wifiSsidSelect.find("option:selected").val());
         }, 0);
     });
+}
+
+function showWifiHistoryLoadingToast() {
+    var msg;
+    arguments[0] ? msg = arguments[0] : msg = "连接中";
+    loadingToast.find(".weui-toast_content").text(msg);
+    loadingToast.fadeIn();
+}
+
+function hideWifiHistoryLoadingToast() {
+    loadingToast.fadeOut("100");
 }

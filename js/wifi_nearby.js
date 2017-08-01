@@ -4,6 +4,7 @@ var myFrame;
 var connected = false;
 var userAgent = navigator.userAgent.toLowerCase();
 var iosSystem = false;
+var loadingToast;
 
 function iframeWifiNearbyLoad() {
     iosSystem = isIos();
@@ -11,7 +12,9 @@ function iframeWifiNearbyLoad() {
     // myFrame = $('#iframe_filemanager').contents();
     mWifiListObj = myFrame.find('#id_WifiList');
     mWifiItemsObj = myFrame.find('#id_WifiItems');
-    // onWifiRefreshClick();
+    loadingToast = myFrame.find("#loading_toast");
+
+    onWifiRefreshClick();
     registerWifiEventListener();
 
     var wifiListHeight;
@@ -68,7 +71,7 @@ function getWifiState(state) {
 
 function refreshWifiList(responseData) {
     mWifiItemsObj.empty();
-    hideLoadingToast();
+    hideWifiNearbyLoadingToast();
     mWifiListObj.css("display", "block");
 	for (var index = 0; index < responseData.length; index++) {
 		addWifiListItem(index + 1, responseData[index]);
@@ -221,10 +224,11 @@ function onWizardSpecClick() {
 }
 
 function onWifiRefreshClick() {
-    showLoadingToast("Wi-Fi 扫描中");
+    showWifiNearbyLoadingToast("Wi-Fi 扫描中");
     mWifiListObj.css("display", "none");
     connected = false;
-    sendCommandBase64(getWifiScanCmd());
+    //TODO
+    // sendCommandBase64(getWifiScanCmd());
      //subEvent(EVENT_IP_REQ);
 }
 
@@ -234,12 +238,12 @@ function onNextStepClick() {
 
 function connect(networkId, password) {
     closeAccessDiv(networkId);
-    showLoadingToast("Wi-Fi 连接中");
+    showWifiNearbyLoadingToast("Wi-Fi 连接中");
     sendCommandBase64(getWifiConnectCmd(networkId, password));
 }
 
 function forget(networkId) {
-    showLoadingToast("Wi-Fi 清除中");
+    showWifiNearbyLoadingToast("Wi-Fi 清除中");
     sendCommandBase64(getWifiForgetCmd(networkId));
 }
 
@@ -252,4 +256,14 @@ function setTouchStartListener() {
     }
 }
 
+function showWifiNearbyLoadingToast() {
+    var msg;
+    arguments[0] ? msg = arguments[0] : msg = "连接中";
+    loadingToast.find(".weui-toast_content").text(msg);
+    loadingToast.fadeIn();
+}
+
+function hideWifiNearbyLoadingToast() {
+    loadingToast.fadeOut("100");
+}
 

@@ -4,7 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name='apple-mobile-web-app-capable' content='yes'>
+
+    <meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1'>
+
     <title>Wizard Wi-Fi Link</title>
     <link rel="stylesheet" href="css/bootstrap-3.3.7/bootstrap.min.css">
     <link rel="stylesheet" href="css/weui-1.1.1/weui.min.css">
@@ -23,6 +26,13 @@
     <!--</div>-->
 <!--</div>-->
 <!--<div class="wizard-bold-line"></div>-->
+<div class="qc-loading-toast" id='loading_toast'  >
+    <div class='weui-mask_transparent'></div>
+    <div class='weui-toast'>
+        <i class='weui-loading weui-icon_toast'></i>
+        <p class='weui-toast_content'>连接中</p>
+    </div>
+</div>
 <div class="wizard">
     <div class="weui-flex" style="margin-top: 10px">
         <div class="weui-flex__item">
@@ -36,13 +46,6 @@
 </div>
 <div class="wizard-split-line"></div>
 <div class="wizard">
-<!--     <div id="id_Loading">
-        <div class="weui-mask_transparent"></div>
-        <div class="weui-toast">
-            <i class="weui-loading weui-icon_toast"></i>
-            <p class="weui-toast__content"></p>
-        </div>
-    </div> -->
     <div id="id_WifiList">
         <div class="wifi-list" id="id_WifiItems"></div>
         <div id="id_RetryDiv">

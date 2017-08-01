@@ -49,7 +49,7 @@ $(document).ready(function () {
     initView();
     var doheight = $(document).height();
     showResult("doheight", doheight);
-     var bcolor = $(document.body).css("background-color");
+    var bcolor = $(document.body).css("background-color");
     showResult("body color", bcolor);
     var htmlcolor = $("html").css("background-color");
     showResult("htmlcolor color", htmlcolor);
@@ -77,7 +77,8 @@ function initView() {
     $(".weui-dialog__btn").on("click", function () {
         mWarningDlg.fadeOut(200);
     });
-    showLoadingToast();
+    //TODO
+    // showLoadingToast();
 }
 
 function setSettingCheck() {
@@ -119,9 +120,7 @@ function checkSetting() {
     }
 
     if (((SETTING_CHECK & WIFI_STATUS_OK) == WIFI_STATUS_OK) && ((netStatus & WIFI_STATUS_OK) != WIFI_STATUS_OK)) {
-        hideLoadingToast();
         subEvent(EVENT_IP_REQ);
-        showLoadingToast("检查网络");
         return;
     }
 
@@ -130,7 +129,6 @@ function checkSetting() {
             pingHttpGet(projectorIP, pingCallback);
         } else {
             ping(projectorIP, pingCallback, 2000);
-
         }
         return;
     }
@@ -181,7 +179,7 @@ function registerEventListener() {
     $(document).on(EVENT_WIFI_DISCONNECTED, function () {
         netStatus &= (~WIFI_STATUS_OK);
         if (currentFrame != FRAME_WIFI) {
-            switchFrame(FRAME_WIFI);
+            switchFrame(FRAME_WIFI_SETTING);
         } else {
             $('.weui-dialog__bd').text("投影仪网络连接失败");
             mWarningDlg.fadeIn(100);
@@ -192,8 +190,8 @@ function registerEventListener() {
         checkSetting();
     });
     $(document).on(EVENT_IP_PING_FAIL, function () {
-        if (currentFrame != FRAME_WIFI) {
-            switchFrame(FRAME_WIFI);
+        if (currentFrame != FRAME_WIFI_SETTING) {
+            switchFrame(FRAME_WIFI_SETTING);
         }
         $('.weui-dialog__bd').text("请保持手机与投影在一个局域网内");
         mWarningDlg.fadeIn(100);
@@ -277,13 +275,13 @@ function switchFrame(index) {
             name = FRAME_BT;
             break;
         case FRAME_WIFI:
-             if ((MODULE_SYNC_DISPLAY == module) || (MODULE_WIRELESS_STORE == module)) {
+            if ((MODULE_SYNC_DISPLAY == module) || (MODULE_WIRELESS_STORE == module)) {
                 loadFunction = "onload='iframeWifiHistoryLoad()'";
                 // url = 'wifi_history_frame.html';
                 url = convertURL('wifi_history_frame.html');
                 name = FRAME_WIFI_HISTORY;
             } else {
-                url = 'wifi_wizard_frame.html';
+                url = 'wifi_nearby_frame.html';
                 loadFunction = "onload='iframeWifiLoad()'";
                 name = FRAME_WIFI;
             }
@@ -306,7 +304,6 @@ function switchFrame(index) {
             name = FRAME_CONTROLLER;
             break;
         case FRAME_WIFI_SETTING:
-            loadFunction = "onload='iframeWifiSettingLoad()'";
             url = 'wifi_setting_frame.html';
             name = FRAME_WIFI_SETTING;
             break;

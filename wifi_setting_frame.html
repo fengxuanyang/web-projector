@@ -10,13 +10,7 @@
     <link rel="stylesheet" href="css/weui-1.1.1/weui.min.css">
     <link rel="stylesheet" href="css/common.css">
 </head>
-<style>
-    body {
-        font-size: 62.5%;
-        height: 100%;
-        margin: 0;
-    }
-
+<style type="text/css">
     .menu-item {
         background-color: whitesmoke;
     }
@@ -33,7 +27,6 @@
     }
 
     .menu-body-frame {
-        position: absolute;
         width: 0;
         height: 0;
         border: 0;
@@ -41,7 +34,6 @@
     }
 
     .menu-body-frame-onshow {
-        position: absolute;
         width: 100%;
         height: 100%;;
         border: 0;
@@ -50,21 +42,31 @@
 </style>
 <body>
 
-<div style="display:flex;flex-direction: column;height: 100%">
-    <div style="display: flex; height: 5rem;  justify-content:space-between;">
-        <div class="menu-item  menu-item-on" id="menu_wifi_nearby" style="flex: 1"
+<div style="display:flex;flex-direction: column;height: 100%;">
+    <div style="display: flex;  height: 10%; justify-content:space-between; ">
+        <div class="menu-item  menu-item-on" style="flex: 1"
              onclick="showMenuBody('frame_wifi_history')">
-            列表选择
-        </div>
-        <div class="menu-item" id="menu_wifi_history" style="flex: 1" onclick="showMenuBody('frame_wifi_nearby')">
             手动输入
         </div>
+        <div class="menu-item" style="flex: 1" onclick="showMenuBody('frame_wifi_nearby')">
+            列表选择
+        </div>
     </div>
-    <div>
-        <iframe class="menu-body-frame menu-body-frame-onshow" id="frame_wifi_history"
-                src="wifi_history_frame.html" onload="parent.window.iframeWifiHistoryLoad()"></iframe>
-        <iframe class="menu-body-frame" id="frame_wifi_nearby"
-                src="wifi_wizard_frame.html" onload="parent.window.iframeWifiNearbyLoad()"></iframe>
+    <div style="height: 90%">
+        <iframe class="menu-body-frame menu-body-frame-onshow"
+                allowtransparency="true"
+                frameborder="no"
+                border="0"
+                marginwidth="0"
+                marginheight="0"
+                scrolling="no"
+                id="frame_wifi_history"
+                src="wifi_history_frame.html"
+                onload="parent.window.iframeWifiHistoryLoad()"
+        ></iframe>
+        <iframe class="menu-body-frame " id="frame_wifi_nearby"
+                src="wifi_nearby_frame.html"
+                onload="parent.window.iframeWifiNearbyLoad()"></iframe>
     </div>
 </div>
 <script src='js/jquery/jquery.min.js'></script>

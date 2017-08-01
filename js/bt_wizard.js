@@ -12,7 +12,7 @@ function iframeBTLoad() {
             retryBtn.css({
                 'background-color': '#ff8a00'
             });
-            showLoadingToast();
+            // showLoadingToast();
             connectWXDevice();
             return;
         }
