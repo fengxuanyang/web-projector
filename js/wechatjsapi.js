@@ -153,16 +153,30 @@ function connectWXDevice() {
     }
 }
 
-function sendDada(base64Str, callback) {
+function sendDada(base64Str, callback, necessary) {
     showResult("sendDada base64Str:", base64Str);
     var cmd = base64Str;
+    if (necessary) {
+        var sendTimer = setTimeout(function () {
+            wx.invoke('sendDataToWXDevice', {'deviceId': mydeviceid, 'connType': 'blue', 'base64Data': cmd},
+                function (res) {
+                    showResult("sendDada cmd:", cmd + ":" + JSON.stringify(res));
+                    mDataSending = false;
+                    if (typeof(myCallback) != "undefined") {
+                        myCallback();
+                    }
+                });
+        }, 0);
+        return;
+    }
+
     if (mDataSending == false) {
         mDataSending = true;
         var myCallback = callback;
         wx.invoke('sendDataToWXDevice', {'deviceId': mydeviceid, 'connType': 'blue', 'base64Data': cmd},
             function (res) {
                 //FOR TEST
-                showResult("sendDada cmd:", cmd+":"+JSON.stringify(res));
+                showResult("sendDada cmd:", cmd + ":" + JSON.stringify(res));
                 mDataSending = false;
                 if (typeof(myCallback) != "undefined") {
                     myCallback();
@@ -207,6 +221,9 @@ function registerDevicesEventListener() {
 
     wx.on('onReceiveDataFromWXDevice', function (res) {
         var responsedata = getResponseFromBase64(res.base64Data);
+        showResult("constructor", responsedata.constructor);
+        showResult("constructor", (responsedata.constructor == proto.airsync.WifiResponse));
+
         if (responsedata.constructor == proto.airsync.EditFocusChangePush) {
             var event = $.Event(EVENT_EDIT_FOCUS_CHANGE);
             $(document).trigger(event, [{focusState: responsedata.getFocus(), text: responsedata.getText()}]);
@@ -219,8 +236,12 @@ function registerDevicesEventListener() {
             return;
         }
         if (responsedata.constructor == proto.airsync.WifiResponse) {
+            showResult("constructor", "WifiResponse");
+
             var wifilist = responsedata.getWifiinfoList();
             subEvent(EVENT_WIFI_LSIT, wifilist);
+            showResult("onReceiveDataFromWXDevice", "EVENT_WIFI_LSIT");
+
             return;
         }
 
@@ -230,13 +251,14 @@ function registerDevicesEventListener() {
             return;
         }
         if (responsedata.constructor == proto.airsync.WifiApHistoryResponse) {
+            showResult("onReceiveDataFromWXDevice", "EVENT_WIFI_HISTORY_LSIT");
             var historylist = responsedata.getWifiapinfoList();
             subEvent(EVENT_WIFI_HISTORY_LSIT, historylist);
             return;
         }
 
         if (responsedata.constructor == proto.airsync.DeviceInfoResponse) {
-             subEvent(EVENT_DEVICE_INFO, responsedata);
+            subEvent(EVENT_DEVICE_INFO, responsedata);
             return;
         }
 

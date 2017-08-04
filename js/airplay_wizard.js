@@ -4,8 +4,7 @@ var iosSystem = false;
 
 function iframeAirPlayLoad() {
     sendCommandBase64(getReqScreenSyncCmd(), function(result) {
-        hideWaiting();
-    });
+     });
 
     iosSystem = isIos();
     airplayFrame = $("#iframe_filemanager").contents();

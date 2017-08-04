@@ -1,7 +1,5 @@
 var BASEURL = "www.robyun.com";
-var testurl = "http://www.robyun.com/projector/wechat/signature?noncestr=727be54e-145a-4705-8a45-44be381f02c8&timestamp=1494331792&url=http%3A%2F%2Flocalhost%3A8080%2FtvControllerFileManager%2Ftvcontroller.html%3Fapi_path%3Dprojector%26app_id%3Dwx4659ac707a4d7397%26mode%3Ddebug";
 var client = null;
-var stateString = "";
 
 function queryWeChatSignature(apipath, noncestr, timestamp, currenturl, callback) {
     BASEURL = window.location.host;
@@ -42,18 +40,19 @@ function ping(ip, callback, timeout) {
     var isCloseWifi = true;
     var hasFinish = false;
 
-    // img.onload = function () {
-    //     showResult("ping onload", ip);
-    //     if (!hasFinish) {
-    //         clearTimeout(timer);
-    //         hasFinish = true;
-    //         flag = true;
-    //         callback(flag);
-    //     }
-    // };
+    img.onload = function () {
+        showResult("ping onload", ip);
+        if (!hasFinish) {
+            clearTimeout(timer);
+            hasFinish = true;
+            flag = true;
+            callback(flag);
+        }
+    };
 
-    img.onload = img.onerror = function () {
-         if (!hasFinish) {
+    img.onerror = function () {
+        showResult("ping onerror", ip + ",isCloseWifi:" + isCloseWifi);
+        if (!hasFinish) {
             clearTimeout(timer);
             hasFinish = true;
             if (!isCloseWifi) {
@@ -61,7 +60,6 @@ function ping(ip, callback, timeout) {
             }
             callback(flag);
         }
-
     };
 
     setTimeout(function () {
@@ -70,7 +68,7 @@ function ping(ip, callback, timeout) {
 
     img.src = 'http://' + ip + '/' + start;
     var timer = setTimeout(function () {
-         if (!flag) {
+        if (!flag) {
             hasFinish = true;
             img.src = 'X://';
             flag = false;
@@ -80,7 +78,7 @@ function ping(ip, callback, timeout) {
 }
 
 function pingHttpGet(ip, callback) {
-    showResult("pingHttpGet",ip);
+    showResult("pingHttpGet", ip);
     var flag = false;
     var url = "http://" + ip + ":45678/ping" + "?request_type=2";
     $.ajax({

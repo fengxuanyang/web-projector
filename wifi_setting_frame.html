@@ -11,12 +11,47 @@
     <link rel="stylesheet" href="css/common.css">
 </head>
 <style type="text/css">
+
+    .menu-tag {
+        position: fixed;
+        opacity: 0.5;
+        display: flex;
+        top: 10px;
+        align-items: center;
+        z-index: 2;
+        height: 3rem;
+        background-color: #ffa11b;;
+        border-radius: 0 2rem 2rem 0
+
+    }
+
     .menu-item {
-        background-color: whitesmoke;
+        height: 100%;
+        text-align: center;
+        color: white;
+        font-size: 1rem;
+        width: 45%;
+
+    }
+
+    .menu-pull {
+        width: 10%;
+        display: flex;
+        align-items: center;
+        border-radius: 0 2rem 2rem 0;
+    }
+
+    .menu-item font {
+        opacity: 0.5
     }
 
     .menu-item-on {
-        background-color: #ff8a00;
+        font-size: 1rem;
+        color: white;
+    }
+
+    .menu-item-on font {
+        opacity: 1
     }
 
     .menu-body {
@@ -30,45 +65,54 @@
         width: 0;
         height: 0;
         border: 0;
-        border: none;
     }
 
     .menu-body-frame-onshow {
         width: 100%;
         height: 100%;;
         border: 0;
-        background-color: white;
     }
 </style>
 <body>
 
-<div style="display:flex;flex-direction: column;height: 100%;">
-    <div style="display: flex;  height: 10%; justify-content:space-between; ">
-        <div class="menu-item  menu-item-on" style="flex: 1"
-             onclick="showMenuBody('frame_wifi_history')">
-            手动输入
-        </div>
-        <div class="menu-item" style="flex: 1" onclick="showMenuBody('frame_wifi_nearby')">
-            列表选择
-        </div>
+<div class="menu-tag" style="width: 80%;left: -72%" id="menu_bar">
+    <div class="menu-item  menu-item-on" style="line-height: 3rem;"
+         onclick="showMenuBody('frame_wifi_history')">
+        <font>创建热点</font>
     </div>
-    <div style="height: 90%">
-        <iframe class="menu-body-frame menu-body-frame-onshow"
-                allowtransparency="true"
-                frameborder="no"
-                border="0"
-                marginwidth="0"
-                marginheight="0"
-                scrolling="no"
-                id="frame_wifi_history"
-                src="wifi_history_frame.html"
-                onload="parent.window.iframeWifiHistoryLoad()"
-        ></iframe>
-        <iframe class="menu-body-frame " id="frame_wifi_nearby"
-                src="wifi_nearby_frame.html"
-                onload="parent.window.iframeWifiNearbyLoad()"></iframe>
+    <div class="qc-split-line">
+    </div>
+    <div class="menu-item" style="line-height: 3rem;"
+         onclick="showMenuBody('frame_wifi_nearby')">
+        <font>选择热点</font>
+    </div>
+    <div id="menu_pull" class="menu-pull"
+         style="height:3rem;  "
+         onclick="switchMenuBar()">
+        <img style="width: 60%;height: 60%" src="res/menu_pull.png">
     </div>
 </div>
+<div style="position: absolute;top:0;bottom: 0;width: 100%">
+    <iframe class="menu-body-frame menu-body-frame-onshow"
+            frameborder="no"
+            border="0"
+            marginwidth="0"
+            marginheight="0"
+            scrolling="no"
+            id="frame_wifi_history"
+            src="wifi_history_frame.html"
+            onload=" window.top.iframeWifiHistoryLoad()"
+    ></iframe>
+    <iframe class="menu-body-frame"
+            frameborder="no"
+            border="0"
+            marginwidth="0"
+            marginheight="0"
+            scrolling="no" id="frame_wifi_nearby"
+            src="wifi_nearby_frame.html"
+            onload="window.top.iframeWifiNearbyLoad()"></iframe>
+</div>
+
 <script src='js/jquery/jquery.min.js'></script>
 <script type="text/javascript">
     !(function () {
@@ -78,9 +122,35 @@
     })();
 
     function showMenuBody(elem) {
-        console.log(elem);
         $("#" + elem).addClass('menu-body-frame-onshow').siblings('.menu-body-frame').removeClass('menu-body-frame-onshow');
+        switchMenuBar();
     }
+
+    var menuBar;
+    var menuLeft;
+    var menuPull;
+
+    function switchMenuBar() {
+        if (!menuBar) {
+            menuBar = $("#menu_bar");
+        }
+        if (!menuPull) {
+            menuPull = $("#menu_pull");
+        }
+
+        var pullwidth = menuPull.width();
+        var barwidth = menuBar.width();
+        menuLeft = menuBar.position().left;
+
+        menuBar.animate({
+                'left': (menuLeft === 0) ? (pullwidth - barwidth ) : 0,
+                'opacity': (menuLeft === 0) ? 0.5 : 1,
+            },
+            200,
+            function () {
+            });
+    }
+
 
 </script>
 </body>

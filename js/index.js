@@ -22,7 +22,7 @@ var deviceInfo;
  * document init
  * **/
 $(document).ready(function () {
-    // var platform = navigator.userAgent;
+     // var platform = navigator.userAgent;
     // var isAndroid = platform.indexOf('Android') > -1 || platform.indexOf('Adr') > -1;
     // showResult("isAndroid:", isAndroid);
     // if (isAndroid) {
@@ -44,15 +44,8 @@ $(document).ready(function () {
     //     });
     // }
 
-    console.log(typeof(fxy));
-
     initView();
-    var doheight = $(document).height();
-    showResult("doheight", doheight);
-    var bcolor = $(document.body).css("background-color");
-    showResult("body color", bcolor);
-    var htmlcolor = $("html").css("background-color");
-    showResult("htmlcolor color", htmlcolor);
+
     setSettingCheck();
 
     registerEventListener();
@@ -77,13 +70,12 @@ function initView() {
     $(".weui-dialog__btn").on("click", function () {
         mWarningDlg.fadeOut(200);
     });
-    //TODO
-    // showLoadingToast();
+     showLoadingToast();
 }
 
 function setSettingCheck() {
     // module = getUrlParam("module");
-    module = FRAME_WIFI_SETTING;
+    module = MODULE_WIFI_SETTINGS;
     switchFrame(FRAME_WIFI_SETTING);
     sessionStorage.module = module;
     switch (module) {
@@ -111,6 +103,7 @@ function setSettingCheck() {
 }
 
 function checkSetting() {
+    showResult("checkSetting",SETTING_CHECK+",netStatus"+netStatus);
     if (((SETTING_CHECK & BT_STATUS_OK) == BT_STATUS_OK) && ((netStatus & BT_STATUS_OK) != BT_STATUS_OK)) {
         if (currentFrame != FRAME_BT) {
             switchFrame(FRAME_BT);
@@ -243,6 +236,7 @@ function registerWifiListener() {
 }
 
 function pingCallback(result) {
+    showResult("pingCallback",result);
     if (result == true) {
         subEvent(EVENT_IP_PING_SUCCESS);
     } else {
@@ -276,13 +270,13 @@ function switchFrame(index) {
             break;
         case FRAME_WIFI:
             if ((MODULE_SYNC_DISPLAY == module) || (MODULE_WIRELESS_STORE == module)) {
-                loadFunction = "onload='iframeWifiHistoryLoad()'";
+                loadFunction = "onload='window.top.iframeWifiHistoryLoad()'";
                 // url = 'wifi_history_frame.html';
                 url = convertURL('wifi_history_frame.html');
                 name = FRAME_WIFI_HISTORY;
             } else {
                 url = 'wifi_nearby_frame.html';
-                loadFunction = "onload='iframeWifiLoad()'";
+                loadFunction = "onload='window.top.iframeWifiNearbyLoad()'";
                 name = FRAME_WIFI;
             }
 
@@ -299,7 +293,7 @@ function switchFrame(index) {
             name = FRAME_WIRELESS_STORE;
             break;
         case FRAME_CONTROLLER:
-            loadFunction = "onload='iframeControllerLoad()'";
+            loadFunction = "onload='window.top.iframeControllerLoad()'";
             url = 'controller_wizard_frame.html';
             name = FRAME_CONTROLLER;
             break;

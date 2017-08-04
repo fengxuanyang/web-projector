@@ -8,7 +8,7 @@ var base64Pad = '=';
 var b64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 var logSrc = "<div class ='weui_cell' style='position:fixed; bottom:0%;width:100%;z-index:999'>" +
     "<div id='logdiv'>" +
-    "<textarea class='weui_textarea logtext' placeholder=日志' rows='6' style='width:100%;background-color:#e4e4e4'></textarea>" +
+    "<textarea class='weui_textarea logtext' placeholder=日志' rows='4' style='width:100%;background-color:#e4e4e4'></textarea>" +
     "</div>" +
     "</div>";
 var isios;

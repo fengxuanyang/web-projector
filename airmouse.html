@@ -1,0 +1,1567 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
+    <style type="text/css">
+        * {
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-text-size-adjust: none;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        body {
+            background-color: #302f3d;
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            font-family: Helvetica;
+        }
+        .container {
+            visibility: hidden;
+        }
+        .notice {
+            background: #302f3d;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+        .btn {
+            background: #3b3a47;
+            box-sizing: border-box;
+            border-radius: 20px;
+            box-shadow: 0px 0px 5px 5px #2a2936, inset 0px 0px 2px 2px #207e89;
+            text-align: center;
+        }
+        .btn:active {
+            background: #428d97;
+            box-shadow: 0px 0px 5px 5px #345a67, inset 0px 0px 2px 2px #22b8c0;
+        }
+        .btn-margin {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            height: calc(100% - 20px);
+            width: calc(100% - 20px);
+        }
+        .btn-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            color: #ffffff;
+            font-size: 32px;
+        }
+        .small-text {
+            font-size: 10px;
+        }
+        #mouse-btn-left {
+            position: fixed;
+            height: 80%;
+            width: 100%;
+        }
+        #mouse-btn-cal {
+            position: fixed;
+            top: 80%;
+            height: 20%;
+            width: 50%;
+        }
+        #mouse-btn-back {
+            position: fixed;
+            top: 80%;
+            left: 50%;
+            height: 20%;
+            width: 50%;
+        }
+        @media (orientation: portrait) {
+            #mouse-notice {
+                visibility: hidden;
+            }
+            #game-menu-keyboard {
+                position: fixed;
+                width: 40px;
+                height: 100%;
+                right: 0px;
+            }
+            #game-joystick {
+                position: fixed;
+                width: calc(100% - 40px);
+                height: 50%;
+            }
+            #game-action-keyboard {
+                position: fixed;
+                width: calc(100% - 40px);
+                height: 50%;
+                top: 50%;
+            }
+            .game-btn-menu {
+                width: 50px;
+                height: 20px;
+                transform: rotate(90deg);
+            }
+            #game-btn-system {
+                position: absolute;
+                right: -5px;
+                top: calc(50% - 120px);
+            }
+            #game-btn-back {
+                position: absolute;
+                right: -5px;
+                top: calc(50% - 50px);
+            }
+            #game-btn-select {
+                position: absolute;
+                right: -5px;
+                top: calc(50% + 20px);
+            }
+            #game-btn-start {
+                position: absolute;
+                right: -5px;
+                top: calc(50% + 90px);
+            }
+            #game-btn-mouse {
+                visibility: hidden;
+                position: absolute;
+                right: -5px;
+                top: calc(100% - 50px);
+            }
+        }
+        @media (orientation: landscape) {
+            #game-menu-keyboard {
+                position: fixed;
+                width: 100%;
+                height: 40px;
+            }
+            #game-joystick {
+                position: fixed;
+                width: 50%;
+                height: calc(100% - 40px);
+                top: 40px;
+            }
+            #game-action-keyboard {
+                position: fixed;
+                width: 50%;
+                height: calc(100% - 40px);
+                left: 50%;
+                top: 40px;
+            }
+            .game-btn-menu {
+                width: 50px;
+                height: 20px;
+            }
+            #game-btn-system {
+                position: absolute;
+                left: calc(50% - 120px);
+                top: 10px;
+            }
+            #game-btn-back {
+                position: absolute;
+                left: calc(50% - 50px);
+                top: 10px;
+            }
+            #game-btn-select {
+                position: absolute;
+                left: calc(50% + 20px);
+                top: 10px;
+            }
+            #game-btn-start {
+                position: absolute;
+                left: calc(50% + 90px);
+                top: 10px;
+            }
+            #game-btn-mouse {
+                visibility: hidden;
+                position: absolute;
+                left: calc(100% - 60px);
+                top: 10px;
+            }
+        }
+    </style>
+</head>
+<body onload="init()">
+<div class="notice" id="close-notice"><div id="notice-reason" class="btn-text">正在连接</div></div>
+<div class="container" id="mouse-container">
+    <div id="mouse-btn-left"><a class="btn btn-margin" href="javascript:void(null)"><div class="btn-text">操作面板</div></a></div>
+    <div id="mouse-btn-cal"><a class="btn btn-margin" href="javascript:void(null)"><div class="btn-text">校准</div></a></div>
+    <div id="mouse-btn-back"><a class="btn btn-margin" href="javascript:void(null)"><div class="btn-text">返回</div></a></div>
+    <div class="notice" id="mouse-notice"><div class="btn-text">请在竖屏模式<br/>使用空中鼠标</div></div>
+</div>
+<div class="container" id="game-container">
+    <div id="game-menu-keyboard">
+        <a class="btn game-btn-menu" id="game-btn-system" href="javascript:void(null)"><div class="btn-text small-text">SYSTEM</div></a>
+        <a class="btn game-btn-menu" id="game-btn-back" href="javascript:void(null)"><div class="btn-text small-text">BACK</div></a>
+        <a class="btn game-btn-menu" id="game-btn-start" href="javascript:void(null)"><div class="btn-text small-text">START</div></a>
+        <a class="btn game-btn-menu" id="game-btn-select" href="javascript:void(null)"><div class="btn-text small-text">SELECT</div></a>
+        <a class="btn game-btn-menu" id="game-btn-mouse" href="javascript:void(null)"><div class="btn-text small-text">MOUSE</div></a>
+    </div>
+    <div id="game-joystick"></div>
+    <div id="game-action-keyboard"></div>
+</div>
+<script>
+    function init() {
+        const seats = ["手柄A", "手柄B", "手柄C", "手柄D", "遥控器"];
+        const send_func = init_websocket();
+        var type = getParameterByName("type");
+        if (type == "mouse") {
+            document.title = "宝橙空中鼠标";
+            init_mouse();
+        } else {
+            type = "gamepad";
+            document.title = "宝橙游戏手柄";
+            init_gamepad();
+        }
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        function getHandsetModel() {
+            var regex = /\((iPhone);|\(Linux; .+; (.+) Build\//g;
+            var result = regex.exec(navigator.userAgent);
+            if (result && result.length == 3) {
+                if (result[1]) {
+                    return result[1];
+                } else {
+                    return result[2];
+                }
+            }
+            return "Player";
+        }
+
+        function init_websocket() {
+            const roomId = getParameterByName("room");
+            const token = getParameterByName("token");
+            const localWsServer = getParameterByName("addr");
+            const localWsPort = getParameterByName("port");
+            const wsLocalUri = "ws://" + localWsServer + ":" + localWsPort + "/ws/controller";
+            const wsRemoveUri = "ws://" + window.location.hostname + ":" + window.location.port + "/ws/controller";
+
+            var websocket = null;
+            var tryRemote = true;
+
+            if (!window.WebSocket) {
+                document.getElementById('notice-reason').innerHTML = "非常抱歉！您的浏览器版本过低，无法进入";
+                document.getElementById('close-notice').style.visibility = 'visible';
+                return null;
+            }
+            openWebSocket(wsLocalUri);
+            setTimeout(function() {
+                if (tryRemote) {
+                    websocket.close();
+                }
+            }, 2000);
+
+            var reason = "请重新扫描二维码或点此处重试";
+            function openWebSocket(wsUri) {
+                websocket = new WebSocket(wsUri);
+                websocket.onopen = function(evt) {
+                    tryRemote = false;
+                    websocket.send(JSON.stringify({room:roomId, token:token, name:getHandsetModel(), type:type}));
+                    document.getElementById('close-notice').style.visibility = 'hidden';
+                };
+                websocket.onclose = function(evt) {
+                    if (tryRemote) {
+                        tryRemote = false;
+                        openWebSocket(wsRemoveUri);
+                    } else {
+                        document.getElementById('mouse-container').style.visibility = 'hidden';
+                        document.getElementById('game-container').style.visibility = 'hidden';
+                        document.getElementById('notice-reason').innerHTML = reason;
+                        document.getElementById('close-notice').style.visibility = 'visible';
+                        document.getElementById('close-notice').addEventListener('click', function() {
+                            window.location.reload();
+                        });
+                    }
+                };
+                websocket.onmessage = function(evt) {
+                    if (evt.data == "{}") {
+                        websocket.send("{\"hb\":\"" + new Date().getTime() + "\"}");
+                    } else {
+                        var root = JSON.parse(evt.data);
+                        if (root.pos != null) {
+                            if (root.pos >= 0) {
+                                document.title += "--" + seats[root.pos];
+                            } else {
+                                reason = "连接已满稍后重试";
+                                websocket.close();
+                            }
+                        }
+                        if (root.select != null) {
+                            if (type == "gamepad") {
+                                switch (root.select) {
+                                    case "com.yingzheng.jlkt3.wocheng":
+                                        init_gamepad("race");
+                                        break;
+                                    case "com.baxa.tanktwo":
+                                        init_gamepad("4way", true);
+                                        break;
+                                    case "com.baxa.leidian3d":
+                                        init_gamepad("normal", true);
+                                        break;
+                                    case "com.tencent.tmgp.sgame":
+                                        init_gamepad("pad");
+                                        break;
+                                    default:
+                                        init_gamepad();
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+
+            function send_data(data) {
+                websocket.send(JSON.stringify(data));
+            }
+
+            return send_data;
+        }
+
+        function send_key_down(code) {
+            var event = [];
+            if (code > 0x12f) {
+                var msc = (code - 0x12f) | 0x90000;
+                event.push({type:4,code:4,value:msc});
+            }
+            event.push({type:1,code:code,value:1});
+            event.push({type:0});
+            send_func({event:event});
+        }
+
+        function send_key_up(code) {
+            var event = [];
+            if (code > 0x12f) {
+                var msc = (code - 0x12f) | 0x90000;
+                event.push({type:4,code:4,value:msc});
+            }
+            event.push({type:1,code:code,value:0});
+            event.push({type:0});
+            send_func({event:event});
+        }
+
+        function send_key_click(code) {
+            send_key_down(code);
+            send_key_up(code);
+        }
+
+        var last_direction = null;
+        var last_distance = null;
+        function send_axis(direction = null, distance = null, forceReset = false) {
+            if (direction == last_direction && distance == last_distance) {
+                return;
+            }
+            last_direction = direction;
+            last_distance = distance;
+            if (direction == null || distance == null) {
+                send_func({event:[{type:3, code:0, value:0},{type:3, code:1, value:0},{type:0}]});
+            } else {
+                var angle = direction * 45 * Math.PI / 180;
+                var x = Math.sign(Math.round(Math.cos(angle))) * distance;
+                var y = Math.sign(Math.round(Math.sin(angle))) * distance;
+                if (forceReset) {
+                    send_func({event:[{type:3, code:0, value:0},{type:3, code:1, value:0},{type:0},{type:-1}]});
+                }
+                send_func({event:[{type:3, code:0, value:x},{type:3, code:1, value:y},{type:0}]});
+            }
+        }
+
+        var pad_axis_originX = 230;
+        var pad_axis_originY = 850;
+        var pad_axis_distance = 150;
+        var pad_axis_touch_down = false;
+        var last_pad_direction = null;
+        function send_pad_axis(direction = null) {
+            if (direction == last_pad_direction) {
+                return;
+            }
+            last_pad_direction = direction;
+            if (direction == null) {
+                send_func({event:[{type:-7, index:0, x:0, y:0, action:1}]});
+                pad_axis_touch_down = false;
+            } else {
+                var angle = direction * 45 * Math.PI / 180;
+                var x = pad_axis_originX + Math.round(Math.cos(angle)) * pad_axis_distance;
+                var y = pad_axis_originY + Math.round(Math.sin(angle)) * pad_axis_distance;
+                if (!pad_axis_touch_down) {
+                    send_func({event:[{type:-7, index:0, x:pad_axis_originX, y:pad_axis_originY, action:0},{type:-1}]});
+                    pad_axis_touch_down = true;
+                }
+                send_func({event:[{type:-7, index:0, x:x, y:y, action:2}]});
+            }
+        }
+
+        var last_race_direction = null;
+        var last_race_distance = null;
+        function send_race(direction = null, distance = null) {
+            if (direction == last_race_direction && distance == last_race_distance) {
+                return;
+            }
+            last_race_direction = direction;
+            last_race_distance = distance;
+            if (direction == null || distance == null) {
+                send_func({event:[{type:3, code:0x9, value:0},{type:3, code:0xa, value:0},{type:0}]});
+            } else {
+                var gas, brake;
+                if (direction == 0) {
+                    gas = distance;
+                    brake = 0;
+                } else {
+                    gas = 0;
+                    brake = distance;
+                }
+                send_func({event:[{type:3, code:0x9, value:gas},{type:3, code:0xa, value:brake},{type:0}]});
+            }
+        }
+
+        const actionKeys = [0x131, 0x130, 0x133, 0x134];
+        var last_action_direction = null;
+        var last_key = null;
+        function send_action(direction = null) {
+            if (direction == last_action_direction) {
+                return;
+            }
+            last_action_direction = direction;
+            if (direction == null) {
+                if (last_key != null) {
+                    send_key_up(last_key);
+                    last_key = null;
+                }
+            } else {
+                if (window.matchMedia("(orientation: portrait)").matches) {
+                    direction -= 1;
+                    if (direction < 0) {
+                        direction += 4;
+                    }
+                }
+                if (last_key != null) {
+                    send_key_up(last_key);
+                }
+                last_key = actionKeys[direction];
+                send_key_down(last_key);
+            }
+        }
+
+        var pad_action_originX = [1750, 1750, 1430, 1540];
+        var pad_action_originY = [630, 930, 950, 750];
+        var last_pad_action_direction = null;
+        var last_pad_action_x, last_pad_action_y;
+        function send_pad_action(x = null, y = null, direction = null) {
+            if (x == null || y == null) {
+                if (last_pad_action_direction != null) {
+                    send_func({event:[{type:-7, index:1, x:0, y:0, action:1}]});
+                    last_pad_action_direction = null;
+                }
+            } else if (direction == null) {
+                if (last_pad_action_direction != null) {
+                    var deltaX, deltaY;
+                    if (window.matchMedia("(orientation: portrait)").matches) {
+                        deltaX = (y - last_pad_action_y) * 2;
+                        deltaY = (x - last_pad_action_x) * -2;
+                    } else {
+                        deltaX = (x - last_pad_action_x) * 2;
+                        deltaY = (y - last_pad_action_y) * 2;
+                    }
+                    send_func({event:[{type:-7, index:1, x:pad_action_originX[last_pad_action_direction] + deltaX, y:pad_action_originY[last_pad_action_direction] + deltaY, action:2}]});
+                }
+            } else {
+                if (window.matchMedia("(orientation: portrait)").matches) {
+                    direction -= 1;
+                    if (direction < 0) {
+                        direction += 4;
+                    }
+                }
+                last_pad_action_direction = direction;
+                last_pad_action_x = x;
+                last_pad_action_y = y;
+                send_func({event:[{type:-7, index:1, x:pad_action_originX[direction], y:pad_action_originY[direction], action:0}]});
+            }
+        }
+
+        function init_mouse(gametype = null) {
+            document.getElementById('game-container').style.visibility = 'hidden';
+            document.getElementById('mouse-container').style.visibility = 'visible';
+
+            const CLICK_DISTANCE = 10;
+            const MOVE_DISTANCE = 150;
+            var startX = 0, startY = 0;
+            var timer = null;
+            var pencil = false;
+            document.getElementById('mouse-btn-left').addEventListener('touchstart', function(event) {
+                if (gametype != null) {
+                    send_func({event:[{type:-5,action:"click"}]});
+                    return;
+                }
+                if (ready) {
+                    for (var i = 0; i < event.changedTouches.length; i++) {
+                        var touch = event.changedTouches[i];
+                        startX = touch.clientX;
+                        startY = touch.clientY;
+                        timer = setTimeout(function() {
+                            send_func({event:[{type:-6,action:"start"}]});
+                            pencil = true;
+                        }, 200);
+                        break;
+                    }
+                }
+            });
+            document.getElementById('mouse-btn-left').addEventListener('touchmove', function(event) {
+                if (gametype != null) {
+                    return;
+                }
+                if (ready) {
+                    clearTimeout(timer);
+                }
+            });
+            document.getElementById('mouse-btn-left').addEventListener('touchend', function(event) {
+                if (gametype != null) {
+                    return;
+                }
+                if (ready) {
+                    for (var i = 0; i < event.changedTouches.length; i++) {
+                        var touch = event.changedTouches[i];
+                        clearTimeout(timer);
+                        if (pencil) {
+                            send_func({event:[{type:-6,action:"end"}]});
+                            pencil = false;
+                            break;
+                        }
+                        var offsetX = Math.abs(touch.clientX - startX);
+                        var offsetY = Math.abs(touch.clientY - startY);
+                        if (offsetX > offsetY) {
+                            if (offsetX < CLICK_DISTANCE) {
+                                send_func({event:[{type:-5,action:"click"}]});
+                            } else {
+                                var direction = (touch.clientX > startX) ? "right" : "left";
+                                if (offsetX > MOVE_DISTANCE) {
+                                    send_func({event:[{type:-5,action:direction,value:100}]});
+                                } else {
+                                    send_func({event:[{type:-5,action:direction,value:50}]});
+                                }
+                            }
+                        } else {
+                            if (offsetY < CLICK_DISTANCE) {
+                                send_func({event:[{type:-5,action:"click"}]});
+                            } else {
+                                var direction = (touch.clientY > startY) ? "down" : "up";
+                                if (offsetY > MOVE_DISTANCE) {
+                                    send_func({event:[{type:-5,action:direction,value:100}]});
+                                } else {
+                                    send_func({event:[{type:-5,action:direction,value:50}]});
+                                }
+                            }
+                        }
+                        break;
+                    }
+                } else {
+                    alert("请对准屏幕中央点击校准按键");
+                }
+            });
+            document.getElementById('mouse-btn-cal').addEventListener('click', function() {
+                ready = true;
+                originX = currentX;
+                originY = currentY;
+                send_func({event:[{type:-2}]});
+            });
+            document.getElementById('mouse-btn-back').addEventListener('click', function() {
+                if (gametype != null) {
+                    send_func({event:[{type:-8}]});
+                    init_gamepad(gametype);
+                    return;
+                }
+                send_key_click(158);
+            });
+
+            var ready = false;
+            var currentX = 0, currentY = 0;
+            var originX = 0, originY = 0;
+            var lastX = 0, lastY = 0;
+            window.ondeviceorientation = function(event) {
+                currentX = event.alpha;
+                currentY = event.beta;
+                if (ready) {
+                    var deltaX = currentX - originX;
+                    var deltaY = currentY - originY;
+                    if (deltaX < -180) {
+                        deltaX += 360;
+                    }
+                    if (deltaX > 180) {
+                        deltaX -= 360;
+                    }
+                    if (Math.abs(deltaX) > 45 || Math.abs(deltaY) > 45) {
+                        return;
+                    }
+                    if (Math.abs(currentX - lastX) < 0.7 && Math.abs(currentY - lastY) < 0.7) {
+                        return;
+                    }
+                    lastX = currentX;
+                    lastY = currentY;
+                    send_func({event:[{type:-3,x:deltaX,y:deltaY}]});
+                }
+            };
+
+            window.oncompassneedscalibration = function(event) {
+                alert('您的罗盘需要校准，请将设备沿数字8方向移动。');
+                event.preventDefault();
+            };
+        }
+
+        function init_gamepad(type = "normal", forceReset = false) {
+            document.getElementById('mouse-container').style.visibility = 'hidden';
+            document.getElementById('game-container').style.visibility = 'visible';
+
+            document.getElementById('game-btn-system').onclick = function() {
+                send_func({event:[{type:-4}]});
+            };
+            document.getElementById('game-btn-back').onclick = function() {
+                send_key_click(158);
+            };
+            document.getElementById('game-btn-start').onclick = function() {
+                send_key_click(0x13b);
+            };
+            document.getElementById('game-btn-select').onclick = function() {
+                send_key_click(0x13a);
+            };
+            document.getElementById('game-btn-mouse').onclick = function() {
+                document.getElementById('game-btn-mouse').style.visibility = "hidden";
+                init_mouse(type);
+            };
+            if (type == "pad") {
+                document.getElementById('game-btn-mouse').style.visibility = "visible";
+            } else {
+                document.getElementById('game-btn-mouse').style.visibility = "hidden";
+            }
+            window.ondeviceorientation = null;
+            window.onresize = function() {
+                setTimeout(function() {
+                    init_joystick_canvas();
+                    init_action_canvas();
+                }, 500);
+            };
+            init_joystick_canvas();
+            init_action_canvas();
+
+            function init_joystick_canvas() {
+                var parent = document.getElementById('game-joystick');
+                while (parent.firstChild) {
+                    parent.removeChild(parent.firstChild);
+                }
+
+                var canvas = document.createElement('canvas');
+                parent.appendChild(canvas);
+
+                var ctx = canvas.getContext('2d');
+                redraw();
+
+                canvas.addEventListener('touchstart', function(event) {
+                    for (var i = 0; i < event.changedTouches.length; i++) {
+                        var touch = event.changedTouches[i];
+                        if (isCanvasEvent(touch)) {
+                            redraw(touch.clientX, touch.clientY);
+                            send_key_down(-1);
+                        }
+                    }
+                });
+                canvas.addEventListener('touchmove', function(event) {
+                    for (var i = 0; i < event.changedTouches.length; i++) {
+                        var touch = event.changedTouches[i];
+                        if (isCanvasEvent(touch)) {
+                            redraw(touch.clientX, touch.clientY);
+                        }
+                    }
+                });
+                canvas.addEventListener('touchend', function(event) {
+                    for (var i = 0; i < event.changedTouches.length; i++) {
+                        var touch = event.changedTouches[i];
+                        if (isCanvasEvent(touch)) {
+                            send_key_up(-1);
+                            redraw(parent.offsetLeft + canvas.width / 2, parent.offsetTop + canvas.height / 2);
+                        }
+                    }
+                });
+
+                if (type == "race") {
+                    window.ondeviceorientation = function(event) {
+                        const valid_angle = 5;
+                        var angle_beta = event.beta;
+                        var angle_delta = Math.abs(angle_beta);
+                        if (angle_delta < valid_angle) {
+                            send_axis();
+                            return;
+                        }
+                        var distance;
+                        if (angle_delta < 20) {
+                            distance = 50;
+                        } else if (angle_delta < 50) {
+                            distance = 75;
+                        } else if (angle_delta < 90) {
+                            distance = 100;
+                        } else {
+                            return;
+                        }
+                        var direction;
+                        if (angle_beta < 0) {
+                            direction = 4;
+                        } else {
+                            direction = 0;
+                        }
+                        send_axis(direction, distance);
+                    };
+                }
+
+                function isCanvasEvent(touch) {
+                    return (touch.clientX > parent.offsetLeft) && (touch.clientX < parent.offsetLeft + parent.offsetWidth) && (touch.clientY > parent.offsetTop) && (touch.clientY < parent.offsetTop + parent.offsetHeight);
+                }
+
+                function redraw(x = null, y = null) {
+                    switch (type) {
+                        case "race":
+                            redrawRace(x, y);
+                            break;
+                        case "4way":
+                            redraw4way(x, y);
+                            break;
+                        case "pad":
+                            redrawPad(x, y);
+                            break;
+                        default:
+                            redrawNormal(x, y);
+                            break;
+                    }
+                }
+
+                function redrawRace(x, y) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+
+                    const valid_radius = 30;
+                    const heavy_radius = 70;
+                    const arrow_radius = heavy_radius - 15;
+                    const out_radius = Math.min(canvas.width / 2, canvas.height / 2) - 20;
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#3b3a47";
+                    ctx.shadowColor = "#2a2936";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#207e89";
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, heavy_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#595863";
+                    ctx.shadowColor = "#34333f";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#3f6e79";
+                    ctx.stroke();
+
+                    redrawObject();
+
+                    if (!x || !y) {
+                        return;
+                    }
+                    x -= parent.offsetLeft;
+                    y -= parent.offsetTop;
+                    var dx = x - canvas.width / 2;
+                    var dy = y - canvas.height / 2;
+                    var distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                    if (distance < valid_radius) {
+                        send_race();
+                        return;
+                    }
+                    distance = (distance < heavy_radius) ? 1 : 2;
+
+                    var direction;
+                    var angle_start, angle_end;
+                    if (window.matchMedia("(orientation: portrait)").matches) {
+                        if (dx > 0) {
+                            direction = 0;
+                            angle_start = 1.5 * Math.PI;
+                            angle_end = 2.5 * Math.PI;
+                        } else {
+                            direction = 1;
+                            angle_start = 0.5 * Math.PI;
+                            angle_end = 1.5 * Math.PI;
+                        }
+                    } else {
+                        if (dy > 0) {
+                            direction = 1;
+                            angle_start = 0;
+                            angle_end = Math.PI;
+                        } else {
+                            direction = 0;
+                            angle_start = Math.PI;
+                            angle_end = 2 * Math.PI;
+                        }
+                    }
+
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                    if (window.matchMedia("(orientation: portrait)").matches) {
+                        if (dx > 0) {
+                            ctx.lineTo(canvas.width / 2, canvas.height / 2 + out_radius);
+                        } else {
+                            ctx.lineTo(canvas.width / 2, canvas.height / 2 - out_radius);
+                        }
+                    } else {
+                        if (dy > 0) {
+                            ctx.lineTo(canvas.width / 2 - out_radius, canvas.height / 2);
+                        } else {
+                            ctx.lineTo(canvas.width / 2 + out_radius, canvas.height / 2);
+                        }
+                    }
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, angle_start, angle_end);
+                    ctx.closePath();
+                    var gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, valid_radius, canvas.width / 2, canvas.height / 2, out_radius);
+                    var colorStop;
+                    if (distance == 1) {
+                        colorStop = "#5da8b0";
+                    } else {
+                        colorStop = "#60d9de";
+                    }
+                    gradient.addColorStop(0, "#606c76");
+                    gradient.addColorStop(1, colorStop);
+                    ctx.fillStyle = gradient;
+                    ctx.shadowColor = colorStop;
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    redrawObject(ctx);
+                    send_race(direction, distance * 50);
+
+                    function redrawObject() {
+                        if (window.matchMedia("(orientation: portrait)").matches) {
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2, canvas.height / 2 - out_radius);
+                            ctx.lineTo(canvas.width / 2, canvas.height / 2 + out_radius);
+                            ctx.strokeStyle = "#207e89";
+                            ctx.shadowColor = "#2a2936";
+                            ctx.shadowBlur = 10;
+                            ctx.stroke();
+
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2 + arrow_radius, canvas.height / 2);
+                            ctx.lineTo(canvas.width / 2 + arrow_radius - 10, canvas.height / 2 - 10);
+                            ctx.lineTo(canvas.width / 2 + arrow_radius - 10, canvas.height / 2 + 10);
+                            ctx.closePath();
+                            ctx.fillStyle = "#ffffff";
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2 - arrow_radius, canvas.height / 2);
+                            ctx.lineTo(canvas.width / 2 - arrow_radius + 10, canvas.height / 2 - 10);
+                            ctx.lineTo(canvas.width / 2 - arrow_radius + 10, canvas.height / 2 + 10);
+                            ctx.closePath();
+                            ctx.fillStyle = "#ffffff";
+                            ctx.fill();
+                        } else {
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2 - out_radius, canvas.height / 2);
+                            ctx.lineTo(canvas.width / 2 + out_radius, canvas.height / 2);
+                            ctx.strokeStyle = "#207e89";
+                            ctx.shadowColor = "#2a2936";
+                            ctx.shadowBlur = 10;
+                            ctx.stroke();
+
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2, canvas.height / 2 + arrow_radius);
+                            ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 + arrow_radius - 10);
+                            ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 + arrow_radius - 10);
+                            ctx.closePath();
+                            ctx.fillStyle = "#ffffff";
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2, canvas.height / 2 - arrow_radius);
+                            ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 - arrow_radius + 10);
+                            ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 - arrow_radius + 10);
+                            ctx.closePath();
+                            ctx.fillStyle = "#ffffff";
+                            ctx.fill();
+                        }
+
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, canvas.height / 2, valid_radius, 0, 2*Math.PI);
+                        ctx.fillStyle = "#3b3a47";
+                        ctx.shadowColor = "#4d4c56";
+                        ctx.shadowBlur = 10;
+                        ctx.fill();
+                    }
+                }
+
+                function redraw4way(x, y) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+
+                    const valid_radius = 30;
+                    const out_radius = Math.min(canvas.width / 2, canvas.height / 2) - 20;
+                    const arrow_radius = out_radius - 15;
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#3b3a47";
+                    ctx.shadowColor = "#2a2936";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#207e89";
+                    ctx.stroke();
+
+                    redrawObject();
+
+                    if (!x || !y) {
+                        return;
+                    }
+                    x -= parent.offsetLeft;
+                    y -= parent.offsetTop;
+                    var dx = x - canvas.width / 2;
+                    var dy = y - canvas.height / 2;
+                    var distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                    if (distance < valid_radius) {
+                        send_axis();
+                        return;
+                    }
+
+                    var direction = Math.atan2(dy, dx) * 180 / Math.PI + 45;
+                    if (direction < 0) {
+                        direction += 360;
+                    }
+                    direction = Math.floor(direction / 90);
+                    var angle_start = (direction * 90 - 45) * Math.PI / 180;
+                    var angle_end = (direction * 90 + 45) * Math.PI / 180;
+
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                    ctx.lineTo(canvas.width / 2 + out_radius * Math.cos(angle_start), canvas.height / 2 + out_radius * Math.sin(angle_start));
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, angle_start, angle_end);
+                    ctx.closePath();
+                    var gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, valid_radius, canvas.width / 2, canvas.height / 2, out_radius);
+                    gradient.addColorStop(0, "#606c76");
+                    gradient.addColorStop(1, "#60d9de");
+                    ctx.fillStyle = gradient;
+                    ctx.shadowColor = "#60d9de";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    redrawObject(ctx);
+                    direction *= 2;
+                    if (window.matchMedia("(orientation: portrait)").matches) {
+                        direction -= 2;
+                    }
+                    send_axis(direction, 100, forceReset);
+
+                    function redrawObject() {
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, canvas.height / 2, valid_radius, 0, 2*Math.PI);
+                        ctx.fillStyle = "#3b3a47";
+                        ctx.shadowColor = "#4d4c56";
+                        ctx.shadowBlur = 10;
+                        ctx.fill();
+
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2 + arrow_radius, canvas.height / 2);
+                        ctx.lineTo(canvas.width / 2 + arrow_radius - 10, canvas.height / 2 - 10);
+                        ctx.lineTo(canvas.width / 2 + arrow_radius - 10, canvas.height / 2 + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2, canvas.height / 2 + arrow_radius);
+                        ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 + arrow_radius - 10);
+                        ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 + arrow_radius - 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2 - arrow_radius, canvas.height / 2);
+                        ctx.lineTo(canvas.width / 2 - arrow_radius + 10, canvas.height / 2 - 10);
+                        ctx.lineTo(canvas.width / 2 - arrow_radius + 10, canvas.height / 2 + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2, canvas.height / 2 - arrow_radius);
+                        ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 - arrow_radius + 10);
+                        ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 - arrow_radius + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                    }
+                }
+
+                function redrawPad(x, y) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+
+                    const valid_radius = 30;
+                    const heavy_radius = 70;
+                    const arrow_radius = heavy_radius - 15;
+                    const out_radius = Math.min(canvas.width / 2, canvas.height / 2) - 20;
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#3b3a47";
+                    ctx.shadowColor = "#2a2936";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#207e89";
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, heavy_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#595863";
+                    ctx.shadowColor = "#34333f";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#3f6e79";
+                    ctx.stroke();
+
+                    redrawObject();
+
+                    if (!x || !y) {
+                        return;
+                    }
+                    x -= parent.offsetLeft;
+                    y -= parent.offsetTop;
+                    var dx = x - canvas.width / 2;
+                    var dy = y - canvas.height / 2;
+                    var distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                    if (distance < valid_radius) {
+                        send_pad_axis();
+                        return;
+                    }
+                    distance = (distance < heavy_radius) ? 1 : 2;
+
+                    var direction = Math.atan2(dy, dx) * 180 / Math.PI + 22.5;
+                    if (direction < 0) {
+                        direction += 360;
+                    }
+                    direction = Math.floor(direction / 45);
+                    var angle_start = (direction * 45 - 22.5) * Math.PI / 180;
+                    var angle_end = (direction * 45 + 22.5) * Math.PI / 180;
+
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                    ctx.lineTo(canvas.width / 2 + out_radius * Math.cos(angle_start), canvas.height / 2 + out_radius * Math.sin(angle_start));
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, angle_start, angle_end);
+                    ctx.closePath();
+                    var gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, valid_radius, canvas.width / 2, canvas.height / 2, out_radius);
+                    var colorStop;
+                    if (distance == 1) {
+                        colorStop = "#5da8b0";
+                    } else {
+                        colorStop = "#60d9de";
+                    }
+                    gradient.addColorStop(0, "#606c76");
+                    gradient.addColorStop(1, colorStop);
+                    ctx.fillStyle = gradient;
+                    ctx.shadowColor = colorStop;
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    redrawObject(ctx);
+                    if (window.matchMedia("(orientation: portrait)").matches) {
+                        direction -= 2;
+                    }
+                    send_pad_axis(direction);
+
+                    function redrawObject() {
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, canvas.height / 2, valid_radius, 0, 2*Math.PI);
+                        ctx.fillStyle = "#3b3a47";
+                        ctx.shadowColor = "#4d4c56";
+                        ctx.shadowBlur = 10;
+                        ctx.fill();
+
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2 + arrow_radius, canvas.height / 2);
+                        ctx.lineTo(canvas.width / 2 + arrow_radius - 10, canvas.height / 2 - 10);
+                        ctx.lineTo(canvas.width / 2 + arrow_radius - 10, canvas.height / 2 + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2, canvas.height / 2 + arrow_radius);
+                        ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 + arrow_radius - 10);
+                        ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 + arrow_radius - 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2 - arrow_radius, canvas.height / 2);
+                        ctx.lineTo(canvas.width / 2 - arrow_radius + 10, canvas.height / 2 - 10);
+                        ctx.lineTo(canvas.width / 2 - arrow_radius + 10, canvas.height / 2 + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2, canvas.height / 2 - arrow_radius);
+                        ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 - arrow_radius + 10);
+                        ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 - arrow_radius + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                    }
+                }
+
+                function redrawNormal(x, y) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+
+                    const valid_radius = 30;
+                    const heavy_radius = 70;
+                    const arrow_radius = heavy_radius - 15;
+                    const out_radius = Math.min(canvas.width / 2, canvas.height / 2) - 20;
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#3b3a47";
+                    ctx.shadowColor = "#2a2936";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#207e89";
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, heavy_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#595863";
+                    ctx.shadowColor = "#34333f";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#3f6e79";
+                    ctx.stroke();
+
+                    redrawObject();
+
+                    if (!x || !y) {
+                        return;
+                    }
+                    x -= parent.offsetLeft;
+                    y -= parent.offsetTop;
+                    var dx = x - canvas.width / 2;
+                    var dy = y - canvas.height / 2;
+                    var distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                    if (distance < valid_radius) {
+                        send_axis();
+                        return;
+                    }
+                    distance = (distance < heavy_radius) ? 1 : 2;
+
+                    var direction = Math.atan2(dy, dx) * 180 / Math.PI + 22.5;
+                    if (direction < 0) {
+                        direction += 360;
+                    }
+                    direction = Math.floor(direction / 45);
+                    var angle_start = (direction * 45 - 22.5) * Math.PI / 180;
+                    var angle_end = (direction * 45 + 22.5) * Math.PI / 180;
+
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                    ctx.lineTo(canvas.width / 2 + out_radius * Math.cos(angle_start), canvas.height / 2 + out_radius * Math.sin(angle_start));
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, angle_start, angle_end);
+                    ctx.closePath();
+                    var gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, valid_radius, canvas.width / 2, canvas.height / 2, out_radius);
+                    var colorStop;
+                    if (distance == 1) {
+                        colorStop = "#5da8b0";
+                    } else {
+                        colorStop = "#60d9de";
+                    }
+                    gradient.addColorStop(0, "#606c76");
+                    gradient.addColorStop(1, colorStop);
+                    ctx.fillStyle = gradient;
+                    ctx.shadowColor = colorStop;
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    redrawObject(ctx);
+                    if (window.matchMedia("(orientation: portrait)").matches) {
+                        direction -= 2;
+                    }
+                    send_axis(direction, distance * 50, forceReset);
+
+                    function redrawObject() {
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, canvas.height / 2, valid_radius, 0, 2*Math.PI);
+                        ctx.fillStyle = "#3b3a47";
+                        ctx.shadowColor = "#4d4c56";
+                        ctx.shadowBlur = 10;
+                        ctx.fill();
+
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2 + arrow_radius, canvas.height / 2);
+                        ctx.lineTo(canvas.width / 2 + arrow_radius - 10, canvas.height / 2 - 10);
+                        ctx.lineTo(canvas.width / 2 + arrow_radius - 10, canvas.height / 2 + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2, canvas.height / 2 + arrow_radius);
+                        ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 + arrow_radius - 10);
+                        ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 + arrow_radius - 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2 - arrow_radius, canvas.height / 2);
+                        ctx.lineTo(canvas.width / 2 - arrow_radius + 10, canvas.height / 2 - 10);
+                        ctx.lineTo(canvas.width / 2 - arrow_radius + 10, canvas.height / 2 + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2, canvas.height / 2 - arrow_radius);
+                        ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 - arrow_radius + 10);
+                        ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 - arrow_radius + 10);
+                        ctx.closePath();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                    }
+                }
+            }
+
+            function init_action_canvas() {
+                var parent = document.getElementById('game-action-keyboard');
+                while (parent.firstChild) {
+                    parent.removeChild(parent.firstChild);
+                }
+
+                var canvas = document.createElement('canvas');
+                parent.appendChild(canvas);
+
+                var ctx = canvas.getContext('2d');
+                redraw();
+
+                canvas.addEventListener('touchstart', function(event) {
+                    for (var i = 0; i < event.changedTouches.length; i++) {
+                        var touch = event.changedTouches[i];
+                        if (isCanvasEvent(touch)) {
+                            redraw(touch.clientX, touch.clientY);
+                        }
+                    }
+                });
+                canvas.addEventListener('touchmove', function(event) {
+                    for (var i = 0; i < event.changedTouches.length; i++) {
+                        var touch = event.changedTouches[i];
+                        if (isCanvasEvent(touch)) {
+                            if (type == "pad") {
+                                send_pad_action(touch.clientX - parent.offsetLeft, touch.clientY - parent.offsetTop);
+                            } else {
+                                redraw(touch.clientX, touch.clientY);
+                            }
+                        }
+                    }
+                });
+                canvas.addEventListener('touchend', function(event) {
+                    for (var i = 0; i < event.changedTouches.length; i++) {
+                        var touch = event.changedTouches[i];
+                        if (isCanvasEvent(touch)) {
+                            redraw(parent.offsetLeft + canvas.width / 2, parent.offsetTop + canvas.height / 2);
+                        }
+                    }
+                });
+
+                function isCanvasEvent(touch) {
+                    return (touch.clientX > parent.offsetLeft) && (touch.clientX < parent.offsetLeft + parent.offsetWidth) && (touch.clientY > parent.offsetTop) && (touch.clientY < parent.offsetTop + parent.offsetHeight);
+                }
+
+                function redraw(x = null, y = null) {
+                    switch (type) {
+                        case "pad":
+                            redrawPad(x, y);
+                            break;
+                        default:
+                            redrawNormal(x, y);
+                            break;
+                    }
+                }
+
+                function redrawPad(x, y) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+
+                    const valid_radius = 30;
+                    const out_radius = Math.min(canvas.width / 2, canvas.height / 2) - 20;
+                    const text_radius = valid_radius + 40;
+
+                    var action_button = [[0, "⇧", 1640, 520], [180, "⇧", 1320, 840], [270, "⇧", 1440, 640], [135, "E", 195, 425], [112.5, "E", 195, 545], [90, "H", 970, 970], [67.5, "H", 1110, 970], [45, "H", 1260, 970]];
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#3b3a47";
+                    ctx.shadowColor = "#2a2936";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#207e89";
+                    ctx.stroke();
+
+                    drawKeyBorder(45);
+                    drawKeyBorder(135);
+                    drawKeyBorder(225);
+                    drawKeyBorder(315);
+
+                    redrawObject();
+
+                    if (!x || !y) {
+                        return;
+                    }
+                    x -= parent.offsetLeft;
+                    y -= parent.offsetTop;
+                    var dx = x - canvas.width / 2;
+                    var dy = y - canvas.height / 2;
+                    var distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                    if (distance < valid_radius) {
+                        send_pad_action();
+                        return;
+                    }
+
+                    if (checkActionButton(x, y)) {
+                        return;
+                    }
+
+                    var direction = Math.atan2(dy, dx) * 180 / Math.PI + 45;
+                    if (direction < 0) {
+                        direction += 360;
+                    }
+                    direction = Math.floor(direction / 90);
+                    var angle_start = (direction * 90 - 45) * Math.PI / 180;
+                    var angle_end = (direction * 90 + 45) * Math.PI / 180;
+
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                    ctx.lineTo(canvas.width / 2 + out_radius * Math.cos(angle_start), canvas.height / 2 + out_radius * Math.sin(angle_start));
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, angle_start, angle_end);
+                    ctx.closePath();
+                    var gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, valid_radius, canvas.width / 2, canvas.height / 2, out_radius);
+                    gradient.addColorStop(0, "#606c76");
+                    gradient.addColorStop(1, "#60d9de");
+                    ctx.fillStyle = gradient;
+                    ctx.shadowColor = "#60d9de";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    redrawObject();
+                    send_pad_action(x, y, direction);
+
+                    function drawKeyBorder(angle) {
+                        var rad = angle * Math.PI / 180;
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                        ctx.lineTo(canvas.width / 2 + out_radius * Math.cos(rad), canvas.height / 2 + out_radius * Math.sin(rad));
+                        ctx.strokeStyle = "#207e89";
+                        ctx.shadowColor = "#2a2936";
+                        ctx.shadowBlur = 10;
+                        ctx.stroke();
+                    }
+
+
+                    function redrawObject() {
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, canvas.height / 2, valid_radius, 0, 2*Math.PI);
+                        ctx.fillStyle = "#3b3a47";
+                        ctx.shadowColor = "#2a2936";
+                        ctx.shadowBlur = 10;
+                        ctx.fill();
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = "#207e89";
+                        ctx.stroke();
+
+                        drawText(0, "3");
+                        drawText(90, "A");
+                        drawText(180, "1");
+                        drawText(270, "2");
+
+                        for (var i=0; i<action_button.length; i++) {
+                            var button = action_button[i];
+                            drawButton(button[0], button[1]);
+                        }
+                    }
+
+                    function drawText(angle, text) {
+                        ctx.save();
+                        ctx.font = "40px Helvetica";
+                        ctx.fillStyle = "#ffffff";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.translate(canvas.width / 2, canvas.height / 2);
+                        if (window.matchMedia("(orientation: portrait)").matches) {
+                            ctx.rotate(Math.PI / 2);
+                        }
+                        var rad = angle * Math.PI / 180;
+                        ctx.fillText(text, text_radius * Math.cos(rad), text_radius * Math.sin(rad));
+                        ctx.restore();
+                    }
+
+                    function drawButton(angle, text) {
+                        var rad = angle * Math.PI / 180;
+                        var x = out_radius * Math.cos(rad);
+                        var y = out_radius * Math.sin(rad);
+                        ctx.save();
+                        ctx.translate(canvas.width / 2, canvas.height / 2);
+                        if (window.matchMedia("(orientation: portrait)").matches) {
+                            ctx.rotate(Math.PI / 2);
+                        }
+                        ctx.beginPath();
+                        ctx.arc(x, y, 20, 0, 2*Math.PI);
+                        ctx.fillStyle = "#207e89";
+                        ctx.fill();
+                        ctx.font = "20px Helvetica";
+                        ctx.fillStyle = "#ffffff";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(text, x, y);
+                        ctx.restore();
+                    }
+
+                    function checkActionButton(x, y) {
+                        for (var i=0; i<action_button.length; i++) {
+                            var button = action_button[i];
+                            var angle = button[0];
+                            var rad = angle * Math.PI / 180;
+                            if (window.matchMedia("(orientation: portrait)").matches) {
+                                rad += Math.PI / 2;
+                            }
+                            var centerX = canvas.width / 2 + out_radius * Math.cos(rad);
+                            var centerY = canvas.height / 2 + out_radius * Math.sin(rad);
+
+                            var distance = Math.sqrt(Math.pow((x - centerX), 2) + Math.pow((y - centerY), 2));
+                            if (distance < 20) {
+                                send_func({event:[{type:-7, index:1, x:button[2], y:button[3], action:0},{type:-7, index:1, x:button[2], y:button[3], action:1}]});
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                }
+
+                function redrawNormal(x, y) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+
+                    const valid_radius = 30;
+                    const out_radius = Math.min(canvas.width / 2, canvas.height / 2) - 20;
+                    const text_radius = valid_radius + 40;
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, 0, 2*Math.PI);
+                    ctx.fillStyle = "#3b3a47";
+                    ctx.shadowColor = "#2a2936";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#207e89";
+                    ctx.stroke();
+
+                    drawKeyBorder(45);
+                    drawKeyBorder(135);
+                    drawKeyBorder(225);
+                    drawKeyBorder(315);
+
+                    redrawObject();
+
+                    if (!x || !y) {
+                        return;
+                    }
+                    x -= parent.offsetLeft;
+                    y -= parent.offsetTop;
+                    var dx = x - canvas.width / 2;
+                    var dy = y - canvas.height / 2;
+                    var distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                    if (distance < valid_radius) {
+                        send_action();
+                        return;
+                    }
+
+                    var direction = Math.atan2(dy, dx) * 180 / Math.PI + 45;
+                    if (direction < 0) {
+                        direction += 360;
+                    }
+                    direction = Math.floor(direction / 90);
+                    var angle_start = (direction * 90 - 45) * Math.PI / 180;
+                    var angle_end = (direction * 90 + 45) * Math.PI / 180;
+
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                    ctx.lineTo(canvas.width / 2 + out_radius * Math.cos(angle_start), canvas.height / 2 + out_radius * Math.sin(angle_start));
+                    ctx.arc(canvas.width / 2, canvas.height / 2, out_radius, angle_start, angle_end);
+                    ctx.closePath();
+                    var gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, valid_radius, canvas.width / 2, canvas.height / 2, out_radius);
+                    gradient.addColorStop(0, "#606c76");
+                    gradient.addColorStop(1, "#60d9de");
+                    ctx.fillStyle = gradient;
+                    ctx.shadowColor = "#60d9de";
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    redrawObject();
+                    send_action(direction);
+
+                    function drawKeyBorder(angle) {
+                        var rad = angle * Math.PI / 180;
+                        ctx.beginPath();
+                        ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                        ctx.lineTo(canvas.width / 2 + out_radius * Math.cos(rad), canvas.height / 2 + out_radius * Math.sin(rad));
+                        ctx.strokeStyle = "#207e89";
+                        ctx.shadowColor = "#2a2936";
+                        ctx.shadowBlur = 10;
+                        ctx.stroke();
+                    }
+
+                    function redrawObject() {
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, canvas.height / 2, valid_radius, 0, 2*Math.PI);
+                        ctx.fillStyle = "#3b3a47";
+                        ctx.shadowColor = "#2a2936";
+                        ctx.shadowBlur = 10;
+                        ctx.fill();
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = "#207e89";
+                        ctx.stroke();
+
+                        drawText(0, "B");
+                        drawText(90, "A");
+                        drawText(180, "X");
+                        drawText(270, "Y");
+                    }
+
+                    function drawText(angle, text) {
+                        ctx.save();
+                        ctx.font = "40px Helvetica";
+                        ctx.fillStyle = "#ffffff";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.translate(canvas.width / 2, canvas.height / 2);
+                        if (window.matchMedia("(orientation: portrait)").matches) {
+                            ctx.rotate(Math.PI / 2);
+                        }
+                        var rad = angle * Math.PI / 180;
+                        ctx.fillText(text, text_radius * Math.cos(rad), text_radius * Math.sin(rad));
+                        ctx.restore();
+                    }
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

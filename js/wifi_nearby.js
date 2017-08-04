@@ -1,18 +1,21 @@
 var mLastNetworkId = -1;
 var mWifiListObj, mWifiItemsObj;
 var myFrame;
-var connected = false;
+var tryconnect = false;
 var userAgent = navigator.userAgent.toLowerCase();
 var iosSystem = false;
-var loadingToast;
+var nearbyloadingToast;
 
 function iframeWifiNearbyLoad() {
+    showResult("iframeWifiNearbyLoad");
     iosSystem = isIos();
-    myFrame = $('#iframe_filemanager').contents().find("#frame_wifi_nearby").contents();
-    // myFrame = $('#iframe_filemanager').contents();
+    myFrame = $('#iframe_filemanager').contents();
+    if (myFrame.has("#frame_wifi_nearby").length) {
+        myFrame = $('#iframe_filemanager').contents().find("#frame_wifi_nearby").contents();
+    }
     mWifiListObj = myFrame.find('#id_WifiList');
     mWifiItemsObj = myFrame.find('#id_WifiItems');
-    loadingToast = myFrame.find("#loading_toast");
+    nearbyloadingToast = myFrame.find("#loading_toast");
 
     onWifiRefreshClick();
     registerWifiEventListener();
@@ -29,6 +32,7 @@ function iframeWifiNearbyLoad() {
 
 function registerWifiEventListener() {
     $(document).on(EVENT_WIFI_LSIT, function (event, wifiList) {
+        showResult("WifiNearby", "EVENT_WIFI_LSIT");
         refreshWifiList(wifiList);
     });
 }
@@ -53,12 +57,15 @@ function getWifiRssiIcon(rssi) {
 }
 
 function getWifiState(state) {
+
     var wifiState = "";
     switch (state) {
         case proto.airsync.WifiState.ACTIVE:
             wifiState = "已连接";
-            // subEvent(EVENT_IP_REQ);
-            // sendCommandBase64(getWifiScanCmd());
+            if (tryconnect) {
+                subEvent(EVENT_IP_REQ);
+                tryconnect = false;
+            }
             break;
         case proto.airsync.WifiState.SAVED:
             wifiState = "已保存";
@@ -70,17 +77,18 @@ function getWifiState(state) {
 }
 
 function refreshWifiList(responseData) {
-    mWifiItemsObj.empty();
+
     hideWifiNearbyLoadingToast();
+
+
+    mWifiItemsObj.empty();
     mWifiListObj.css("display", "block");
-	for (var index = 0; index < responseData.length; index++) {
-		addWifiListItem(index + 1, responseData[index]);
-	}
-	
-	var iframeObj = document.getElementById("iframe_filemanager");
-	iframeObj.contentWindow.document.getElementById("id_WifiItems").scrollTop = 0;
-	
-    setTouchStartListener();
+    for (var index = 0; index < responseData.length; index++) {
+        addWifiListItem(index + 1, responseData[index]);
+    }
+     //
+     mWifiItemsObj.scrollTop = 0;
+    // setTouchStartListener();
 }
 
 function addWifiListItem(index, wifiInfo) {
@@ -91,7 +99,7 @@ function addWifiListItem(index, wifiInfo) {
     rssi = wifiInfo.getRssi();
     state = getWifiState(wifiInfo.getState());
 
-    httpCode += "<div class='weui-flex wifi-item' onclick='parent.window.onWifiItemClick(" + networkId + "," + security + "," + wifiInfo.getState() + ")'>" +
+    httpCode += "<div class='weui-flex wifi-item' onclick='window.top.onWifiItemClick(" + networkId + "," + security + "," + wifiInfo.getState() + ")'>" +
         "<div class='weui-flex__item wifi-item-desc'>";
 
     if (state != "") {
@@ -114,38 +122,38 @@ function addWifiListItem(index, wifiInfo) {
         "<div class='weui-flex wifi-access-div' id='id_Access_" + networkId + "'>" +
         "<div class='weui-flex__item'>" +
         "<input class='wifi-access-input' id='id_AccessPassword_" + networkId + "' type='password' placeholder='请输入wifi密码'>";
-		
-		
-	if (iosSystem) {
-		httpCode += "<button class='wifi-access-button-ios btn-with-active' onclick='parent.window.onWifiAccessCancelClick(" + networkId + ")'>取消</button>" +
-			"<button class='wifi-access-button-ios btn-with-active' onclick='parent.window.onWifiAccessConnectClick(" + networkId + ")'>连接</button>" +
-			"</div>" +
-			"</div>" +
-			"<div class='weui-flex wifi-action-div' id='id_Action_" + networkId + "'>" +
-			"<div class='weui-flex__item'>" +
-			"<button class='wifi-action-button-ios btn-with-active' onclick='parent.window.onWifiActionCancelClick(" + networkId + ")'>取消</button>" +
-			"</div>" +
-			"<div class='weui-flex__item'>" +
-			"<button class='wifi-action-button-ios btn-with-active' onclick='parent.window.onWifiActionForgetClick(" + networkId + ")'>清除</button>" +
-			"</div>" +
-			"<div class='weui-flex__item'>" +
-			"<button class='wifi-action-button-ios btn-with-active' onclick='parent.window.onWifiActionConnectClick(" + networkId + ")'>连接</button>";
-	} else {
-		httpCode += "<button class='wifi-access-button btn-with-active' onclick='parent.window.onWifiAccessCancelClick(" + networkId + ")'>取消</button>" +
-			"<button class='wifi-access-button btn-with-active' onclick='parent.window.onWifiAccessConnectClick(" + networkId + ")'>连接</button>" +
-			"</div>" +
-			"</div>" +
-			"<div class='weui-flex wifi-action-div' id='id_Action_" + networkId + "'>" +
-			"<div class='weui-flex__item'>" +
-			"<button class='wifi-action-button btn-with-active' onclick='parent.window.onWifiActionCancelClick(" + networkId + ")'>取消</button>" +
-			"</div>" +
-			"<div class='weui-flex__item'>" +
-			"<button class='wifi-action-button btn-with-active' onclick='parent.window.onWifiActionForgetClick(" + networkId + ")'>清除</button>" +
-			"</div>" +
-			"<div class='weui-flex__item'>" +
-			"<button class='wifi-action-button btn-with-active' onclick='parent.window.onWifiActionConnectClick(" + networkId + ")'>连接</button>";
-	}
-	
+
+
+    if (iosSystem) {
+        httpCode += "<button class='wifi-access-button-ios btn-with-active' onclick='window.top.onWifiAccessCancelClick(" + networkId + ")'>取消</button>" +
+            "<button class='wifi-access-button-ios btn-with-active' onclick='window.top.onWifiAccessConnectClick(" + networkId + ")'>连接</button>" +
+            "</div>" +
+            "</div>" +
+            "<div class='weui-flex wifi-action-div' id='id_Action_" + networkId + "'>" +
+            "<div class='weui-flex__item'>" +
+            "<button class='wifi-action-button-ios btn-with-active' onclick='window.top.onWifiActionCancelClick(" + networkId + ")'>取消</button>" +
+            "</div>" +
+            "<div class='weui-flex__item'>" +
+            "<button class='wifi-action-button-ios btn-with-active' onclick='window.top.onWifiActionForgetClick(" + networkId + ")'>清除</button>" +
+            "</div>" +
+            "<div class='weui-flex__item'>" +
+            "<button class='wifi-action-button-ios btn-with-active' onclick='window.top.onWifiActionConnectClick(" + networkId + ")'>连接</button>";
+    } else {
+        httpCode += "<button class='wifi-access-button btn-with-active' onclick='window.top.onWifiAccessCancelClick(" + networkId + ")'>取消</button>" +
+            "<button class='wifi-access-button btn-with-active' onclick='window.top.onWifiAccessConnectClick(" + networkId + ")'>连接</button>" +
+            "</div>" +
+            "</div>" +
+            "<div class='weui-flex wifi-action-div' id='id_Action_" + networkId + "'>" +
+            "<div class='weui-flex__item'>" +
+            "<button class='wifi-action-button btn-with-active' onclick='window.top.onWifiActionCancelClick(" + networkId + ")'>取消</button>" +
+            "</div>" +
+            "<div class='weui-flex__item'>" +
+            "<button class='wifi-action-button btn-with-active' onclick='window.top.onWifiActionForgetClick(" + networkId + ")'>清除</button>" +
+            "</div>" +
+            "<div class='weui-flex__item'>" +
+            "<button class='wifi-action-button btn-with-active' onclick='window.top.onWifiActionConnectClick(" + networkId + ")'>连接</button>";
+    }
+
     httpCode += "</div>" +
         "</div>" +
         "<div style='margin-bottom: 2px'></div>" +
@@ -226,10 +234,11 @@ function onWizardSpecClick() {
 function onWifiRefreshClick() {
     showWifiNearbyLoadingToast("Wi-Fi 扫描中");
     mWifiListObj.css("display", "none");
-    connected = false;
-    //TODO
-    // sendCommandBase64(getWifiScanCmd());
-     //subEvent(EVENT_IP_REQ);
+    tryconnect = false;
+    sendCommandBase64(getWifiScanCmd(), function () {
+        showResult("getWifiScanCmd", "result");
+    }, true);
+    //subEvent(EVENT_IP_REQ);
 }
 
 function onNextStepClick() {
@@ -240,6 +249,7 @@ function connect(networkId, password) {
     closeAccessDiv(networkId);
     showWifiNearbyLoadingToast("Wi-Fi 连接中");
     sendCommandBase64(getWifiConnectCmd(networkId, password));
+    tryconnect = true;
 }
 
 function forget(networkId) {
@@ -259,11 +269,13 @@ function setTouchStartListener() {
 function showWifiNearbyLoadingToast() {
     var msg;
     arguments[0] ? msg = arguments[0] : msg = "连接中";
-    loadingToast.find(".weui-toast_content").text(msg);
-    loadingToast.fadeIn();
+    showResult("showWifiNearbyLoadingToast", msg);
+    nearbyloadingToast.find(".weui-toast_content").text(msg);
+    nearbyloadingToast.fadeIn();
 }
 
 function hideWifiNearbyLoadingToast() {
-    loadingToast.fadeOut("100");
+    showResult("hideWifiNearbyLoadingToast");
+    nearbyloadingToast.fadeOut("100");
 }
 

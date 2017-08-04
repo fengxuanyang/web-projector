@@ -8,45 +8,6 @@ function iframeControllerLoad() {
     mControlFrame = $('#iframe_filemanager').contents();
     mInputDiv = mControlFrame.find("#control_input");
     controlPage = mControlFrame.find("#control_page");
-
-
-    var windowheight = $(window).height();
-    showResult("windowheight", windowheight);
-
-    var doheight = $(document).height();
-    showResult("doheight", doheight);
-    var htmlHeight = $("html").height();
-    showResult("htmlHeight", htmlHeight);
-    var bodyHeight = $("body").height();
-    showResult("bodyHeight", bodyHeight);
-    var bcolor = $("body").css("background-color");
-    showResult("body color", bcolor);
-    var htmlcolor = $("html").css("background-color");
-    showResult("htmlcolor color", htmlcolor);
-    mInputDiv.focus(function () {
-        var doheight = $(document).height();
-        showResult("focus doheight", doheight);
-        var htmlHeight = $("html").height();
-        showResult("htmlHeight", htmlHeight);
-        var bodyHeight = $("body").height();
-        showResult("focus bodyHeight", bodyHeight);
-        $("body").css({
-            "top": "0px",
-            "height": windowheight + "px"
-        });
-    });
-    mInputDiv.blur(function () {
-        var doheight = $(document).height();
-        showResult("blur doheight", doheight);
-        var htmlHeight = $("html").height();
-        showResult("blur htmlHeight", htmlHeight);
-        var bodyHeight = $("body").height();
-        showResult("blur bodyHeight", bodyHeight);
-        $("body").css({
-            "top": "0px",
-            "height": windowheight + "px"
-        });
-    });
     iosSystem = isIos();
     loadSound();
     registerCotrollerViewListener();
@@ -413,10 +374,10 @@ function registerCotrollerViewListener() {
 
 }
 
-function sendCommandBase64(cmd, callback) {
+function sendCommandBase64(cmd, callback,necessary) {
     showResult("sendCommandBase64 cmd:", cmd);
     var cmd64 = bytesToBase64(cmd);
-    sendDada(cmd64, callback);
+    sendDada(cmd64, callback,necessary);
 }
 
 function loadSound() {

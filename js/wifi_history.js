@@ -12,15 +12,10 @@ var loadingToast;
 
 
 function iframeWifiHistoryLoad() {
-    showResult("iframeWifiHistoryLoad", "onload");
-    //TODO
-    // sendCommandBase64(getWifiHistoryCmd());
-
-    // historyFrame = $('#iframe_filemanager').contents();
-
-    historyFrame = $('#iframe_filemanager').contents().find("#frame_wifi_history").contents();
-    loadingToast = historyFrame.find("#loading_toast");
-    showWifiHistoryLoadingToast("检查网络");
+    historyFrame = $('#iframe_filemanager').contents();
+    if (historyFrame.has("#frame_wifi_history").length) {
+        historyFrame = $('#iframe_filemanager').contents().find("#frame_wifi_history").contents();
+    }
     if (isIos()) {
         historyFrame.find('#wifihistory_navpage').css({
             'background-image': 'url(res/wifihistory_ios_bg.jpg)',
@@ -28,17 +23,19 @@ function iframeWifiHistoryLoad() {
         historyFrame.find('#airplay_downoad_wrapper').css({
             'display': 'none',
         });
-
     }
     historyFrame.find('body').on('touchmove', function (e) {
         e.preventDefault();
     });
-
+    loadingToast = historyFrame.find("#loading_toast");
+    sendCommandBase64(getWifiHistoryCmd(), function () {
+        showResult("getWifiHistoryCmd", "result");
+    }, true);
+    showWifiHistoryLoadingToast("获取网络");
     wifiSsidSelect = historyFrame.find('#wifihistory_select_wifissid');
     wifiSsidInput = historyFrame.find('#wifihistory_input_ssid');
     wifiPswInput = historyFrame.find('#wifihistory_input_psw');
     historyFrame.find('#wifihistory_next_btn').on('click', function (event) {
-        showResult("wifihistory_next_btn", "click");
         currentWifiSsid = wifiSsidInput.val() + "";
         currentWifiPsw = wifiPswInput.val() + "";
         if (!currentWifiSsid) {
@@ -51,13 +48,9 @@ function iframeWifiHistoryLoad() {
         historyFrame.find("#wifihistory_navpage").css({
             display: 'block',
         });
-        // showResult("connect currentWifiSsid：", currentWifiSsid);
-        //connect wifi 
-        sendCommandBase64(getWifiSSIDConnectCmd(currentWifiSsid, currentWifiPsw));
         $(document).on(EVENT_WIFI_LSIT, function (event, wifiList) {
             for (var i = 0; i < wifiList.length; i++) {
                 var wifiinfo = wifiList[i];
-                // showResult("wifiInfo :", wifiinfo.getSsid() + "," + wifiinfo.getState());
                 if (wifiinfo.getSsid() == currentWifiSsid) {
                     historyFrame.find('#wifihistory_result').css('display', 'none');
                     if (wifiinfo.getState() == proto.airsync.WifiState.ACTIVE) {
@@ -68,6 +61,8 @@ function iframeWifiHistoryLoad() {
             }
             historyFrame.find('#wifihistory_result').css('display', 'block');
         });
+        sendCommandBase64(getWifiSSIDConnectCmd(currentWifiSsid, currentWifiPsw));
+
     });
 
 

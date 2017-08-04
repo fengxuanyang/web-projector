@@ -38,7 +38,7 @@
         <div class="weui-flex__item">
             <p class="summary-text">投影仪网络设置</p>
         </div>
-        <div class="wifi-scan-btn btn-with-active" onclick="parent.window.onWifiRefreshClick()">
+        <div class="wifi-scan-btn btn-with-active" onclick="window.top.onWifiRefreshClick()">
             <span>搜索网络</span>
             <img style="width: 18px; height: 18px" src="res/more.png">
         </div>
@@ -52,7 +52,7 @@
             <div class="wizard-bold-line"></div>
             <div class="weui-flex">
                 <div class="weui-flex__item"></div>
-                <div class="weui-flex__item" onclick="parent.window.onNextStepClick()">
+                <div class="weui-flex__item" onclick="window.top.onNextStepClick()">
                     <div class="wifi-retry-btn btn-with-active">
                         <img class="wizard-spec-icon" src="res/refresh.png">
                         <p>重试</p>

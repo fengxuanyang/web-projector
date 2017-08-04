@@ -271,13 +271,13 @@ function getResponseFromBase64(base64Str) {
             responsedata = proto.airsync.EditFocusChangePush.deserializeBinary(responseDataRawData);
             break;
         case proto.airsync.CmdId.REQ_KEY_INPUT:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        responsedata = proto.airsync.KeyInputRequest.deserializeBinary(responseDataRawData);
+            responsedata = proto.airsync.KeyInputRequest.deserializeBinary(responseDataRawData);
             break;
         case proto.airsync.CmdId.RESP_FILE_MANAGER:
             responsedata = proto.airsync.FileManagerResponse.deserializeBinary(responseDataRawData);
             break;
         case proto.airsync.CmdId.RESP_WIFI:
-            responsedata = proto.airsync.WifiResponse.deserializeBinary(responseDataRawData);
+             responsedata = proto.airsync.WifiResponse.deserializeBinary(responseDataRawData);
             break;
         case proto.airsync.CmdId.RESP_IP:
             responsedata = proto.airsync.IpResponse.deserializeBinary(responseDataRawData);
